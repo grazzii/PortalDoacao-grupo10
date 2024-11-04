@@ -22,9 +22,17 @@
             flex-direction: column; /* Para empilhar a navbar e o conteúdo */
         }
 
+        .logo {
+            width: 80px; /* Ajuste o tamanho conforme necessário */
+            height: auto; /* Mantém a proporção da imagem */
+            margin-right: 10px; /* Espaço entre a logo e o título */
+            vertical-align: middle; /* Alinha verticalmente com o texto */
+        }
+
         /* Estilos da barra de navegação */
         .navbar {
-            background-color: #044f9e; /* Cor de fundo azul */
+            background-color: #ffffff; /* Cor de fundo azul */
+            font-weight: 600;
             width: 100%;
             padding: 10px 20px; /* Espaçamento interno */
             display: flex;
@@ -37,7 +45,7 @@
         }
 
         .navbar h1 {
-            color: #ffffff; /* Cor do título */
+            color: #007bff; /* Cor do título */
             font-size: 1.5em; /* Tamanho do título */
         }
 
@@ -46,7 +54,7 @@
         }
 
         .menu a {
-            color: #ffffff; /* Texto branco */
+            color: #007bff; /* Texto branco */
             text-decoration: none; /* Sem sublinhado */
             padding: 10px 15px; /* Espaçamento interno dos links */
             margin: 0 5px; /* Margem entre links */
@@ -117,6 +125,7 @@
 </head>
 <body>
     <div class="navbar">
+        <img src="/ajudae.png" alt="Logo Ajudaê" class="logo">
         <h1>Ajudaê</h1>
         <div class="menu">
             <a href="index.html">Home</a>

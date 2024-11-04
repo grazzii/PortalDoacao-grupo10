@@ -28,11 +28,11 @@ header h1 {
 }
 
 /* Logo */
-#logo {
-    display: block;
-    margin: 0 auto;
-    max-width: 150px;
-    margin-bottom: 20px; /* Espaço abaixo do logo */
+.logo {
+    width: 80px; /* Ajuste o tamanho conforme necessário */
+    height: auto; /* Mantém a proporção da imagem */
+    margin-right: 10px; /* Espaço entre a logo e o título */
+    vertical-align: middle; /* Alinha verticalmente com o texto */
 }
 
 /* Menu de navegação */
