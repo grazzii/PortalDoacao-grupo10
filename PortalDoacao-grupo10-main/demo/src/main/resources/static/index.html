@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campanhas</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Campanhas</h1>
+    <table id="campanhasTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Meta</th>
+                <th>Valor Arrecadado</th>
+                <th>Causa</th>
+                <th>Data Início</th>
+                <th>Data Fim</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        // Função para buscar e exibir as campanhas
+        async function carregarCampanhas() {
+            try {
+                const response = await fetch('/api/campanhas'); // Endpoint da API
+                const campanhas = await response.json();
+                
+                const tbody = document.querySelector('#campanhasTable tbody');
+                tbody.innerHTML = ''; // Limpa a tabela antes de adicionar novos dados
+
+                campanhas.forEach(campanha => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${campanha.id}</td>
+                        <td>${campanha.nome}</td>
+                        <td>${campanha.descricao}</td>
+                        <td>${campanha.meta}</td>
+                        <td>${campanha.valorArrecadado}</td>
+                        <td>${campanha.causa}</td>
+                        <td>${campanha.dataInicio}</td>
+                        <td>${campanha.dataFim}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar as campanhas:', error);
+            }
+        }
+
+        // Carrega as campanhas ao abrir a página
+        window.onload = carregarCampanhas;
+    </script>
+</body>
+</html>
