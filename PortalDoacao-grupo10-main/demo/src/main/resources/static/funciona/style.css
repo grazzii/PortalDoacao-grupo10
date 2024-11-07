@@ -7,7 +7,7 @@
 body {
     font-family: 'Roboto', sans-serif; 
     background-color: #ffffff; 
-    color: #007bff;
+    color: #1ac95d;
     line-height: 1.6;
     padding: 30px;
 }
@@ -34,7 +34,7 @@ body {
  }
 
 .navbar h1 {
-    color: #007bff; /* Cor do título */
+    color: #1ac95d; /* Cor do título */
     font-size: 1.5em; /* Tamanho do título */
 }
 
@@ -43,7 +43,7 @@ body {
 }
 
 .menu a {
-    color: #007bff; /* Texto branco */
+    color: #1ac95d; /* Texto branco */
     font-weight: bold;
     text-decoration: none; /* Sem sublinhado */
     padding: 10px 15px; /* Espaçamento interno dos links */
@@ -62,7 +62,7 @@ header {
 }
 
 header h1 {
-    color: #007bff; 
+    color: #1ac95d; 
     font-size: 2.5em; 
     margin-bottom: 10px; 
 }
@@ -86,13 +86,13 @@ section {
 
 section h2 {
     font-size: 2em; 
-    color: #007bff; 
+    color: #1ac95d; 
     margin-bottom: 15px;
 }
 
 .step h3 {
     font-size: 1.5em; 
-    color: #007bff; 
+    color: #1ac95d; 
     margin-top: 10px;
     margin-bottom: 10px;
 }

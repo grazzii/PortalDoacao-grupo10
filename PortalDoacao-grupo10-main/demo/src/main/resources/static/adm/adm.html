@@ -104,21 +104,7 @@
         }
 
         #campanhasTable tr:hover {
-            background-color: #1ac95d;
-        }
-
-        .doar-btn {
-            padding: 8px 16px;
-            background-color: #1ac95d; /* Cor verde */
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .doar-btn:hover {
-            background-color: #1ac95d; /* Cor verde mais escuro */
+            background-color: #f9f9f9;
         }
 
         /* Responsivo */
@@ -153,6 +139,7 @@
         <table id="campanhasTable">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Nome</th>
                     <th>Descrição</th>
                     <th>Meta</th>
@@ -160,7 +147,6 @@
                     <th>Causa</th>
                     <th>Data Início</th>
                     <th>Data Fim</th>
-                    <th>Doe</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -180,6 +166,7 @@
                 campanhas.forEach(campanha => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
+                        <td data-label="ID">${campanha.id}</td>
                         <td data-label="Nome">${campanha.nome}</td>
                         <td data-label="Descrição">${campanha.descricao}</td>
                         <td data-label="Meta">${campanha.meta}</td>
@@ -187,19 +174,12 @@
                         <td data-label="Causa">${campanha.causa}</td>
                         <td data-label="Data Início">${campanha.dataInicio}</td>
                         <td data-label="Data Fim">${campanha.dataFim}</td>
-                        <td><button class="doar-btn" onclick="doarParaCampanha('${campanha.id}')">Doar</button></td>
                     `;
                     tbody.appendChild(tr);
                 });
             } catch (error) {
                 console.error('Erro ao carregar as campanhas:', error);
             }
-        }
-
-        // Função para realizar a doação (simulação)
-        function doarParaCampanha(id) {
-            alert(`Você está doando para a campanha com ID: ${id}`);
-            // Aqui você pode adicionar a lógica para redirecionar o usuário para uma página de doação ou realizar outra ação
         }
 
         // Carrega as campanhas ao abrir a página
