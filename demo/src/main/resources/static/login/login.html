@@ -6,139 +6,172 @@
     <title>Página de Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Reset básico */
+        /* Estilos principais */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #ffffff; /* Cor de fundo suave */
+            background-color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            flex-direction: column; /* Alinha itens verticalmente */
+            flex-direction: column;
         }
-
-        .logo {
-            width: 80px; /* Ajuste o tamanho conforme necessário */
-            height: auto; /* Mantém a proporção da imagem */
-            margin-right: 10px; /* Espaço entre a logo e o título */
-            vertical-align: middle; /* Alinha verticalmente com o texto */
-        }
-
-        /* Estilos da barra de navegação */
         .navbar {
-            background-color: #ffffff; /* Cor de fundo azul */
+            background-color: #ffffff;
             width: 100%;
-            padding: 10px 20px; /* Espaçamento interno */
+            padding: 10px 20px;
             display: flex;
-            justify-content: space-between; /* Espaço entre itens */
-            align-items: center; /* Alinhamento vertical */
-            border-radius: 0 0 8px 8px; /* Bordas arredondadas na parte inferior */
-            position: absolute; /* Fixa na parte superior */
-            top: 0; /* Alinha no topo */
-            z-index: 1000; /* Mantém no topo de outros elementos */
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0 0 8px 8px;
+            position: absolute;
+            top: 0;
+            z-index: 1000;
         }
-
         .navbar h1 {
-            color: #1ac95d; /* Cor do título */
-            font-size: 1.5em; /* Tamanho do título */
+            color: #1ac95d;
+            font-size: 1.5em;
             font-weight: bold;
         }
-
         .menu {
-            display: flex; /* Flexbox para os itens do menu */
+            display: flex;
         }
-
         .menu a {
-            color: #1ac95d; /* Texto branco */
+            color: #1ac95d;
             font-weight: 600;
-            text-decoration: none; /* Sem sublinhado */
-            padding: 10px 15px; /* Espaçamento interno dos links */
-            margin: 0 5px; /* Margem entre links */
-            border-radius: 4px; /* Bordas arredondadas */
-            transition: background-color 0.3s; /* Transição suave */
+            text-decoration: none;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
         }
-
         .menu a:hover {
-            background-color: rgba(255, 255, 255, 0.2); /* Cor de fundo ao passar o mouse */
+            background-color: rgba(255, 255, 255, 0.2);
         }
-
         .login-container {
-            background-color: #ffffff; /* Fundo branco */
+            background-color: #ffffff;
             padding: 40px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             width: 100%;
-            max-width: 400px; /* Largura máxima */
-            margin-top: 80px; /* Espaço acima para não cobrir a barra de navegação */
+            max-width: 400px;
+            margin-top: 80px;
         }
-
         h2 {
-            text-align: center; 
-            color: #ffffff;
-            margin-bottom: 20px; 
+            text-align: center;
+            color: #1ac95d;
+            margin-bottom: 20px;
         }
-
         .form-group {
-            margin-bottom: 20px; 
+            margin-bottom: 20px;
         }
-
         label {
-            display: block; 
-            margin-bottom: 5px; 
-            color: #333; 
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
         }
-
         input[type="text"],
         input[type="password"] {
-            width: 100%; 
+            width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 4px; 
-            font-size: 16px; 
+            border-radius: 4px;
+            font-size: 16px;
         }
-
         input[type="text"]:focus,
         input[type="password"]:focus {
-            border-color: #1ac95d; 
-            outline: none; 
+            border-color: #1ac95d;
+            outline: none;
         }
-
         button {
-            width: 100%; 
-            padding: 10px; 
-            background-color: #1ac95d; 
-            color: #ffffff; 
-            border: none; 
-            border-radius: 4px; 
-            font-size: 16px; 
-            cursor: pointer; 
-            transition: background-color 0.3s; 
+            width: 100%;
+            padding: 10px;
+            background-color: #1ac95d;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-
         button:hover {
-            background-color: #1ac95d; 
+            background-color: #1ac95d;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
         }
 
-        .footer {
-            text-align: center; 
-            margin-top: 20px; 
-            color: #666; 
+        /* Estilos do fundo embacado para o pop-up */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+
+        /* Estilos do pop-up de erro */
+        .error-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            color: #1ac95d;
+            border: 2px solid #1ac95d;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            z-index: 1001;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .error-popup p {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .error-popup button {
+            margin-top: 10px;
+            background-color: #1ac95d;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .error-popup button:hover {
+            background-color: #138c4a;
+        }
+        /* Animação de fade-in */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
         }
 
         /* Responsivo */
         @media (max-width: 400px) {
             .login-container {
-                padding: 20px; 
+                padding: 20px;
             }
-
             h2 {
-                font-size: 1.5em; 
+                font-size: 1.5em;
             }
         }
     </style>
@@ -156,7 +189,7 @@
 
     <div class="login-container">
         <h2>Login</h2>
-        <form>
+        <form id="loginForm">
             <div class="form-group">
                 <label for="username">Usuário</label>
                 <input type="text" id="username" placeholder="Digite seu usuário" required>
@@ -171,5 +204,40 @@
             <p>Esqueceu a senha? <a href="#" style="color: #044f9e; text-decoration: underline;">Clique aqui</a></p>
         </div>
     </div>
+
+    <!-- Fundo embacado e pop-up de erro -->
+    <div class="overlay" id="overlay"></div>
+    <div class="error-popup" id="errorPopup">
+        <p>Usuário ou senha incorretos</p>
+        <button onclick="fecharPopup()">Fechar</button>
+    </div>
+
+    <script>
+        // Função para autenticar o usuário
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const usuario = document.getElementById('username').value;
+            const senha = document.getElementById('password').value;
+
+            // Se as credenciais forem corretas, redireciona para a página de admin
+            if (usuario === 'adm' && senha === 'adm') {
+                window.location.href = '../adm/adm.html';
+            } else {
+                mostrarPopupErro();
+            }
+        });
+
+        // Função para exibir o pop-up de erro e o fundo embacado
+        function mostrarPopupErro() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('errorPopup').style.display = 'block';
+        }
+
+        // Função para fechar o pop-up de erro e remover o fundo embacado
+        function fecharPopup() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('errorPopup').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
