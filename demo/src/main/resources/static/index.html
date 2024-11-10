@@ -99,12 +99,12 @@
                 const container = document.getElementById('campanhasContainer');
                 container.innerHTML = '';
 
-                // Lista de imagens alternativas para campanhas sem imagem específica
+                // Caminhos das imagens alternativas para campanhas sem imagem específica
                 const imagensAlternativas = [
-                    'https://ifrs.edu.br/bento/wp-content/uploads/sites/13/2020/10/Dia_crianca.jpg',
-                    'https://cmararaquara.sp.gov.br/Arquivos/Noticias/65f2b3ae-0af8-48e3-abc8-fc44a42bb671.png',
-                    'https://www.conjur.com.br/wp-content/uploads/2024/05/SOS-RS-scaled.jpg',
-                    'https://jornalbomdia.com.br/tb_noticias/21160/doen%C3%A7asraras-01.png'
+                    'imagens/criancas.png',
+                    'imagens/fome.png',
+                    'imagens/doencas.png',
+                    'imagens/agasalho.png'
                 ];
 
                 campanhas.forEach((campanha, index) => {
@@ -131,6 +131,7 @@
                 showPopup("Erro", "Erro ao carregar as campanhas. Tente novamente mais tarde.", "error");
             }
         }
+
 
 
         async function doarParaCampanha(id) {
