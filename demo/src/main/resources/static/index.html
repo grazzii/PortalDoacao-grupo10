@@ -60,6 +60,23 @@
             cursor: pointer;
         }
 
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+            height: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .progress {
+            background-color: #1ac95d;
+            height: 100%;
+            border-radius: 10px 0 0 10px;
+        }
+
         .popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); padding: 20px; text-align: center; z-index: 2000; }
         
         .popup.success { border: 2px solid #1ac95d; }
@@ -100,7 +117,6 @@
                 const container = document.getElementById('campanhasContainer');
                 container.innerHTML = '';
 
-                // Caminhos das imagens alternativas para campanhas sem imagem específica
                 const imagensAlternativas = [
                     'imagens/criancas.png',
                     'imagens/fome.png',
@@ -112,8 +128,8 @@
                     const card = document.createElement('div');
                     card.className = 'campanha-card';
 
-                    // Define a imagem a ser usada: imagem da campanha ou uma alternativa da lista
                     const imagemUrl = campanha.imagemUrl || imagensAlternativas[campanha.id % imagensAlternativas.length];
+                    const porcentagem = Math.floor((campanha.valorArrecadado / campanha.meta) * 100);
 
                     card.innerHTML = `
                         <img src="${imagemUrl}" alt="${campanha.nome}">
@@ -122,6 +138,10 @@
                             <p>${campanha.descricao}</p>
                             <p><strong>Meta:</strong> R$ ${campanha.meta}</p>
                             <p><strong>Arrecadado:</strong> R$ <span id="valorArrecadado-${campanha.id}">${campanha.valorArrecadado}</span></p>
+                            <p>${porcentagem}%</p>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: ${porcentagem}%;"></div>
+                            </div>
                             <input type="number" min="1" placeholder="Valor" id="donationValue-${campanha.id}" class="doar-input"/>
                             <button class="doar-btn" onclick="doarParaCampanha(${campanha.id})">Doar</button>
                         </div>
@@ -136,7 +156,7 @@
         async function doarParaCampanha(id) {
             const valorInput = document.getElementById(`donationValue-${id}`);
             let valor = valorInput.value.replace(',', '.');
-            
+
             if (parseFloat(valor) <= 0 || isNaN(parseFloat(valor))) {
                 showPopup("Erro", "Por favor, insira um valor válido para a doação (maior que 0).", "error");
                 return;
@@ -164,6 +184,7 @@
                     showPopup("Sucesso", "Doação realizada com sucesso!", "success");
                     document.getElementById(`valorArrecadado-${id}`).textContent = campanha.valorArrecadado;
                     valorInput.value = '';
+                    carregarCampanhas();
                 } else {
                     showPopup("Erro", "Erro ao realizar doação. Verifique os dados e tente novamente.", "error");
                 }
