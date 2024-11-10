@@ -45,6 +45,20 @@ public class CampanhaController {
     }
 
     @PutMapping("/{id}")
+    public Campanha atualizarCampanha(@PathVariable Long id, @RequestBody Campanha campanhaAtualizada) {
+        return campanhaRepo.findById(id).map(campanha -> {
+            campanha.setNome(campanhaAtualizada.getNome());
+            campanha.setDescricao(campanhaAtualizada.getDescricao());
+            campanha.setMeta(campanhaAtualizada.getMeta());
+            campanha.setValorArrecadado(campanhaAtualizada.getValorArrecadado());
+            campanha.setCausa(campanhaAtualizada.getCausa());
+            campanha.setDataInicio(campanhaAtualizada.getDataInicio());
+            campanha.setDataFim(campanhaAtualizada.getDataFim());
+            return campanhaRepo.save(campanha); // Atualiza a campanha
+        }).orElseThrow(() -> new RuntimeException("Campanha não encontrada com o ID: " + id));
+    }
+
+    @PutMapping("/{id}/doar")
     @SuppressWarnings("CallToPrintStackTrace")
     public ResponseEntity<String> updateValorArrecadado(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
         System.out.println("Requisição PUT recebida para atualizar a campanha com ID: " + id);

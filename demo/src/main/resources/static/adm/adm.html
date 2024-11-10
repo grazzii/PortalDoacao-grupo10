@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/Ajudaê.ico" type="image/x-icon">
-    <title>Campanhas</title>
+    <title>Administração de Campanhas</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* Reset básico */
@@ -20,191 +20,265 @@
             color: #1a1a1a;
             line-height: 1.6;
             display: flex; 
-            flex-direction: column; /* Para empilhar a navbar e o conteúdo */
+            flex-direction: column;
         }
 
-        .logo {
-            width: 80px; /* Ajuste o tamanho conforme necessário */
-            height: auto; /* Mantém a proporção da imagem */
-            margin-right: 10px; /* Espaço entre a logo e o título */
-            vertical-align: middle; /* Alinha verticalmente com o texto */
-        }
-
-        /* Estilos da barra de navegação */
         .navbar {
-            background-color: #ffffff; /* Cor de fundo azul */
+            background-color: #ffffff;
             font-weight: 600;
             width: 100%;
-            padding: 10px 20px; /* Espaçamento interno */
+            padding: 10px 20px;
             display: flex;
-            justify-content: space-between; /* Espaço entre itens */
-            align-items: center; /* Alinhamento vertical */
-            border-radius: 0 0 8px 8px; /* Bordas arredondadas na parte inferior */
-            position: fixed; /* Fixa na parte superior */
-            top: 0; /* Alinha no topo */
-            z-index: 1000; /* Mantém no topo de outros elementos */
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0 0 8px 8px;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
         }
 
         .navbar h1 {
-            color: #1ac95d; /* Cor do título */
-            font-size: 1.5em; /* Tamanho do título */
+            color: #1ac95d;
+            font-size: 1.5em;
         }
 
         .menu {
-            display: flex; /* Flexbox para os itens do menu */
+            display: flex;
         }
 
         .menu a {
-            color: #1ac95d; /* Texto branco */
-            text-decoration: none; /* Sem sublinhado */
-            padding: 10px 15px; /* Espaçamento interno dos links */
-            margin: 0 5px; /* Margem entre links */
-            border-radius: 4px; /* Bordas arredondadas */
-            transition: background-color 0.3s; /* Transição suave */
+            color: #1ac95d;
+            text-decoration: none;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
         }
 
-        .menu a:hover {
-            background-color: rgba(255, 255, 255, 0.2); /* Cor de fundo ao passar o mouse */
-        }
-
-        /* Estilo para o link ativo */
+        /* Estilo para link ativo */
         .menu a.active {
             border-bottom: 2px solid #1ac95d;
         }
 
         .content {
-            margin-top: 80px; /* Espaço abaixo da navbar */
+            margin-top: 80px;
             padding: 20px;
-            flex: 1; 
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
         }
 
-        #campanhasTable {
-            width: 100%;
-            border-collapse: collapse;
+        .campanha-card {
             background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            text-align: center;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        #campanhasTable th, #campanhasTable td {
-            padding: 15px;
-            text-align: left;
+        .campanha-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 3px solid #1ac95d;
+            margin-bottom: 15px;
         }
 
-        #campanhasTable th {
-            background-color: #1ac95d; 
-            color: #fff;
-            font-weight: 600;
-            font-size: 16px;
-            text-transform: uppercase;
+        .campanha-card h3 {
+            color: #1ac95d;
+            font-size: 1.2em;
+            margin-bottom: 10px;
         }
 
-        #campanhasTable td {
+        .campanha-card p {
             color: #666;
-            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 8px;
+            font-size: 0.9em;
         }
 
-        #campanhasTable tr:last-child td {
-            border-bottom: none;
+        .campanha-card .meta, .campanha-card .valorArrecadado {
+            font-weight: bold;
         }
 
-        #campanhasTable tr:hover {
-            background-color: #f9f9f9;
+        .edit-btn, .insert-btn {
+            padding: 8px 15px;
+            margin: 5px;
+            background-color: #1ac95d;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
         }
 
-        /* Responsivo */
-        @media (max-width: 768px) {
-            #campanhasTable th, #campanhasTable td {
-                padding: 10px; 
-            }
+        .form-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            z-index: 2000;
+        }
 
-            .navbar {
-                flex-direction: column; /* Empilha os itens da navbar em telas pequenas */
-            }
+        .form-popup input, .form-popup textarea {
+            width: 90%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
 
-            .menu {
-                flex-direction: column; /* Alinha os links verticalmente */
-            }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
         }
     </style>
 </head>
 <body>
     <div class="navbar">
-        <h1>Ajudaê</h1>
+        <h1>Administração de Campanhas</h1>
         <div class="menu">
             <a href="../index.html">Home</a>
-            <a href="../adm/adm.html">Adm</a>
+            <a href="../adm/adm.html" class="active">Adm</a>
             <a href="../funciona/como-funciona.html">Como Funciona</a>
-            <a href="../login/login.html">Login</a>
+            <a href="../login/login.html">Sair</a>
         </div>
     </div>
 
-    <div class="content">
-        <!-- Tabela de campanhas -->
-        <table id="campanhasTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Descrição</th>
-                    <th>Meta</th>
-                    <th>Valor Arrecadado</th>
-                    <th>Causa</th>
-                    <th>Data Início</th>
-                    <th>Data Fim</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+    <div class="content" id="campanhasContainer">
+        <!-- Cards de campanhas serão carregados aqui -->
+    </div>
+
+    <button class="insert-btn" onclick="abrirFormularioInserir()">Inserir Nova Campanha</button>
+
+    <div class="overlay" onclick="fecharFormulario()"></div>
+
+    <!-- Formulário de edição/inserção -->
+    <div class="form-popup" id="formCampanha">
+        <h2 id="formTitulo">Editar Campanha</h2>
+        <input type="hidden" id="campanhaId">
+        <input type="text" id="campanhaNome" placeholder="Nome da Campanha">
+        <textarea id="campanhaDescricao" placeholder="Descrição da Campanha"></textarea>
+        <input type="number" id="campanhaMeta" placeholder="Meta">
+        <input type="number" id="campanhaValorArrecadado" placeholder="Valor Arrecadado">
+        <input type="text" id="campanhaCausa" placeholder="Causa">
+        <input type="date" id="campanhaDataInicio">
+        <input type="date" id="campanhaDataFim">
+        <button class="edit-btn" onclick="salvarCampanha()">Salvar</button>
     </div>
 
     <script>
-        // Função para buscar e exibir as campanhas
         async function carregarCampanhas() {
             try {
                 const response = await fetch('/api/campanhas');
                 const campanhas = await response.json();
                 
-                const tbody = document.querySelector('#campanhasTable tbody');
-                tbody.innerHTML = '';
+                const container = document.getElementById('campanhasContainer');
+                container.innerHTML = '';
 
                 campanhas.forEach(campanha => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td data-label="ID">${campanha.id}</td>
-                        <td data-label="Nome">${campanha.nome}</td>
-                        <td data-label="Descrição">${campanha.descricao}</td>
-                        <td data-label="Meta">${campanha.meta}</td>
-                        <td data-label="Valor Arrecadado">${campanha.valorArrecadado}</td>
-                        <td data-label="Causa">${campanha.causa}</td>
-                        <td data-label="Data Início">${campanha.dataInicio}</td>
-                        <td data-label="Data Fim">${campanha.dataFim}</td>
+                    const card = document.createElement('div');
+                    card.classList.add('campanha-card');
+                    card.innerHTML = `
+                        <img src="${campanha.imagemUrl}" alt="Imagem da campanha ${campanha.nome}">
+                        <h3>${campanha.nome}</h3>
+                        <p><strong>ID:</strong> ${campanha.id}</p>
+                        <p><strong>Descrição:</strong> ${campanha.descricao}</p>
+                        <p><strong>Meta:</strong> R$ ${campanha.meta}</p>
+                        <p><strong>Valor Arrecadado:</strong> R$ ${campanha.valorArrecadado}</p>
+                        <p><strong>Causa:</strong> ${campanha.causa}</p>
+                        <p><strong>Data Início:</strong> ${campanha.dataInicio}</p>
+                        <p><strong>Data Fim:</strong> ${campanha.dataFim}</p>
+                        <button class="edit-btn" onclick="abrirFormularioEditar(${campanha.id})">Editar</button>
                     `;
-                    tbody.appendChild(tr);
+                    container.appendChild(card);
                 });
             } catch (error) {
                 console.error('Erro ao carregar as campanhas:', error);
             }
         }
 
-        // Carrega as campanhas ao abrir a página
-        window.onload = carregarCampanhas;
+        function abrirFormularioEditar(id) {
+            document.getElementById('formTitulo').innerText = 'Editar Campanha';
+            document.getElementById('campanhaId').value = id;
+            document.querySelector('.overlay').style.display = 'block';
+            document.getElementById('formCampanha').style.display = 'block';
+        }
 
-        // Identifica o link da página atual e adiciona a classe 'active'
-        document.addEventListener("DOMContentLoaded", function() {
-            const currentPath = window.location.pathname;
+        function abrirFormularioInserir() {
+            document.getElementById('formTitulo').innerText = 'Inserir Nova Campanha';
+            document.getElementById('campanhaId').value = '';
+            document.querySelector('.overlay').style.display = 'block';
+            document.getElementById('formCampanha').style.display = 'block';
+        }
 
-            if (currentPath.includes("index.html")) {
-                document.querySelector(".menu a[href*='index.html']").classList.add("active");
-            } else if (currentPath.includes("adm.html")) {
-                document.querySelector(".menu a[href*='adm.html']").classList.add("active");
-            } else if (currentPath.includes("como-funciona.html")) {
-                document.querySelector(".menu a[href*='como-funciona.html']").classList.add("active");
-            } else if (currentPath.includes("login.html")) {
-                document.querySelector(".menu a[href*='login.html']").classList.add("active");
+        function fecharFormulario() {
+            document.querySelector('.overlay').style.display = 'none';
+            document.getElementById('formCampanha').style.display = 'none';
+        }
+
+        async function salvarCampanha() {
+            const id = document.getElementById('campanhaId').value;
+            const campanha = {
+                nome: document.getElementById('campanhaNome').value,
+                descricao: document.getElementById('campanhaDescricao').value,
+                meta: parseFloat(document.getElementById('campanhaMeta').value),
+                valorArrecadado: parseFloat(document.getElementById('campanhaValorArrecadado').value),
+                causa: document.getElementById('campanhaCausa').value,
+                dataInicio: document.getElementById('campanhaDataInicio').value,
+                dataFim: document.getElementById('campanhaDataFim').value,
+            };
+
+            try {
+                let response;
+                if (id) {
+                    // Editar campanha existente
+                    response = await fetch(`/api/campanhas/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(campanha)
+                    });
+                } else {
+                    // Inserir nova campanha
+                    response = await fetch('/api/campanhas', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(campanha)
+                    });
+                }
+
+                if (response.ok) {
+                    fecharFormulario();
+                    carregarCampanhas();
+                } else {
+                    console.error('Erro ao salvar a campanha');
+                }
+            } catch (error) {
+                console.error('Erro ao salvar a campanha:', error);
             }
-        });
+        }
+
+        window.onload = carregarCampanhas;
     </script>
 </body>
 </html>
