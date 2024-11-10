@@ -99,11 +99,23 @@
                 const container = document.getElementById('campanhasContainer');
                 container.innerHTML = '';
 
-                campanhas.forEach(campanha => {
+                // Lista de imagens alternativas para campanhas sem imagem específica
+                const imagensAlternativas = [
+                    'https://ifrs.edu.br/bento/wp-content/uploads/sites/13/2020/10/Dia_crianca.jpg',
+                    'https://cmararaquara.sp.gov.br/Arquivos/Noticias/65f2b3ae-0af8-48e3-abc8-fc44a42bb671.png',
+                    'https://www.conjur.com.br/wp-content/uploads/2024/05/SOS-RS-scaled.jpg',
+                    'https://jornalbomdia.com.br/tb_noticias/21160/doen%C3%A7asraras-01.png'
+                ];
+
+                campanhas.forEach((campanha, index) => {
                     const card = document.createElement('div');
                     card.className = 'campanha-card';
+
+                    // Define a imagem a ser usada: imagem da campanha ou uma alternativa da lista
+                    const imagemUrl = campanha.imagemUrl || imagensAlternativas[index % imagensAlternativas.length];
+
                     card.innerHTML = `
-                        <img src="https://via.placeholder.com/300x180" alt="${campanha.nome}">
+                        <img src="${imagemUrl}" alt="${campanha.nome}">
                         <div class="campanha-info">
                             <h2>${campanha.nome}</h2>
                             <p>${campanha.descricao}</p>
@@ -119,6 +131,7 @@
                 showPopup("Erro", "Erro ao carregar as campanhas. Tente novamente mais tarde.", "error");
             }
         }
+
 
         async function doarParaCampanha(id) {
             const valorInput = document.getElementById(`donationValue-${id}`);
