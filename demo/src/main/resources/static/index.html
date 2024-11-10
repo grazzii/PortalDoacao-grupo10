@@ -39,45 +39,99 @@
         #campanhasTable tr:last-child td { border-bottom: none; }
         
         #campanhasTable tr:hover { background-color: #f9f9f9; }
-        
+
         .doar-input {
-    width: 80px;
-    padding: 6px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-    color: #333;
-    text-align: center;
-    margin-right: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
+            width: 80px;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+            margin-right: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
 
-.doar-input:focus {
-    outline: none;
-    border-color: #1ac95d;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-}
+        .doar-input:focus {
+            outline: none;
+            border-color: #1ac95d;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        }
 
-.doar-btn {
-    padding: 8px 20px;
-    background-color: #1ac95d;
-    color: white;
-    font-size: 15px;
-    font-weight: bold;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-}
+        .doar-btn {
+            padding: 8px 20px;
+            background-color: #1ac95d;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
 
-.doar-btn:hover {
-    background-color: #16a94d;
-    transform: scale(1.05);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
+        .doar-btn:hover {
+            background-color: #16a94d;
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
 
+        /* Estilos para o popup */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            z-index: 2000;
+        }
+        
+        .popup h2 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .popup.success {
+            border: 2px solid #1ac95d;
+        }
+
+        .popup.error {
+            border: 2px solid #ff4d4d;
+        }
+
+        .popup button {
+            margin-top: 15px;
+            padding: 8px 20px;
+            background-color: #1ac95d;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .popup button:hover {
+            background-color: #16a94d;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
@@ -92,7 +146,6 @@
     </div>
 
     <div class="content">
-        <!-- Tabela de campanhas -->
         <table id="campanhasTable">
             <thead>
                 <tr>
@@ -110,13 +163,19 @@
         </table>
     </div>
 
+    <!-- Overlay and Popup -->
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <h2 id="popupTitle"></h2>
+        <p id="popupMessage"></p>
+        <button onclick="closePopup()">Fechar</button>
+    </div>
+
     <script>
-        // Função para buscar e exibir as campanhas com IDs corretos
         async function carregarCampanhas() {
             try {
                 const response = await fetch('http://localhost:8087/api/campanhas');
                 const campanhas = await response.json();
-                console.log(campanhas); // Verifique a resposta da API
 
                 const tbody = document.querySelector('#campanhasTable tbody');
                 tbody.innerHTML = '';
@@ -139,7 +198,7 @@
                     tbody.appendChild(tr);
                 });
             } catch (error) {
-                console.error('Erro ao carregar as campanhas:', error);
+                showPopup("Erro", "Erro ao carregar as campanhas. Tente novamente mais tarde.", "error");
             }
         }
 
@@ -148,24 +207,20 @@
             valor = valor.replace(',', '.');
 
             if (parseFloat(valor) <= 0 || isNaN(parseFloat(valor))) {
-                alert("Por favor, insira um valor válido para a doação (maior que 0).");
+                showPopup("Erro", "Por favor, insira um valor válido para a doação (maior que 0).", "error");
                 return;
             }
 
             const valorEnviado = parseFloat(valor).toFixed(2);
-            console.log("Valor enviado para atualização:", valorEnviado);
 
             try {
                 const responseCampanha = await fetch(`http://localhost:8087/api/campanhas/${id}`);
-                
                 if (!responseCampanha.ok) {
-                    alert("Campanha não encontrada.");
+                    showPopup("Erro", "Campanha não encontrada.", "error");
                     return;
                 }
 
                 const campanha = await responseCampanha.json();
-                console.log("Dados completos da campanha:", campanha);
-
                 campanha.valorArrecadado = (parseFloat(campanha.valorArrecadado) + parseFloat(valorEnviado)).toFixed(2);
 
                 const response = await fetch(`http://localhost:8087/api/campanhas/${id}`, {
@@ -175,36 +230,32 @@
                 });
 
                 if (response.ok) {
-                    alert('Doação realizada com sucesso!');
+                    showPopup("Sucesso", "Doação realizada com sucesso!", "success");
                     carregarCampanhas();
                 } else {
-                    const errorText = await response.text();
-                    console.error('Erro ao realizar doação:', errorText);
-                    alert('Erro ao realizar doação. Verifique os dados e tente novamente.');
+                    showPopup("Erro", "Erro ao realizar doação. Verifique os dados e tente novamente.", "error");
                 }
             } catch (error) {
-                console.error('Erro ao processar a doação:', error);
-                alert('Ocorreu um erro ao processar a doação. Tente novamente mais tarde.');
+                showPopup("Erro", "Ocorreu um erro ao processar a doação. Tente novamente mais tarde.", "error");
             }
         }
 
-        // Carrega as campanhas ao abrir a página
+        function showPopup(title, message, type) {
+            const popup = document.getElementById("popup");
+            const overlay = document.getElementById("overlay");
+            popup.className = `popup ${type}`;
+            document.getElementById("popupTitle").textContent = title;
+            document.getElementById("popupMessage").textContent = message;
+            popup.style.display = "block";
+            overlay.style.display = "block";
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+
         window.onload = carregarCampanhas;
-
-        // Identifica o link da página atual e adiciona a classe 'active'
-        document.addEventListener("DOMContentLoaded", function() {
-            const currentPath = window.location.pathname;
-
-            if (currentPath.includes("index.html")) {
-                document.querySelector(".menu a[href*='index.html']").classList.add("active");
-            } else if (currentPath.includes("adm.html")) {
-                document.querySelector(".menu a[href*='adm.html']").classList.add("active");
-            } else if (currentPath.includes("como-funciona.html")) {
-                document.querySelector(".menu a[href*='como-funciona.html']").classList.add("active");
-            } else if (currentPath.includes("login.html")) {
-                document.querySelector(".menu a[href*='login.html']").classList.add("active");
-            }
-        });
     </script>
 </body>
 </html>
