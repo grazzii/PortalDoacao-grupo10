@@ -6,6 +6,15 @@
     <title>Campanhas</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* Estilos gerais de cores */
+        :root {
+            --verde-principal: #1ac95d; /* Verde predominante */
+            --branco-fundo: #ffffff;   /* Fundo branco */
+            --cinza-claro: #f4f4f4;
+            --cinza-texto: #666;
+            --sombra: rgba(0, 0, 0, 0.1);
+        }
+
         /* Reset básico */
         * {
             margin: 0;
@@ -14,116 +23,136 @@
         }
 
         body {
-            font-family: 'Roboto', sans-serif; 
-            background-color: #f4f4f4; 
-            color: #1a1a1a;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--cinza-claro);
+            color: var(--cinza-texto);
             line-height: 1.6;
-            display: flex; 
-            flex-direction: column; /* Para empilhar a navbar e o conteúdo */
-        }
-
-        .logo {
-            width: 80px; /* Ajuste o tamanho conforme necessário */
-            height: auto; /* Mantém a proporção da imagem */
-            margin-right: 10px; /* Espaço entre a logo e o título */
-            vertical-align: middle; /* Alinha verticalmente com o texto */
-        }
-
-        /* Estilos da barra de navegação */
-        .navbar {
-            background-color: #ffffff; /* Cor de fundo azul */
-            font-weight: 600;
-            width: 100%;
-            padding: 10px 20px; /* Espaçamento interno */
             display: flex;
-            justify-content: space-between; /* Espaço entre itens */
-            align-items: center; /* Alinhamento vertical */
-            border-radius: 0 0 8px 8px; /* Bordas arredondadas na parte inferior */
-            position: fixed; /* Fixa na parte superior */
-            top: 0; /* Alinha no topo */
-            z-index: 1000; /* Mantém no topo de outros elementos */
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--branco-fundo);
+            width: 100%;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--verde-principal);
+            position: fixed;
+            top: 0;
+            z-index: 1000;
         }
 
         .navbar h1 {
-            color: #1ac95d; /* Cor do título */
-            font-size: 1.5em; /* Tamanho do título */
-        }
-
-        .menu {
-            display: flex; /* Flexbox para os itens do menu */
+            color: var(--verde-principal);
+            font-size: 1.5em;
         }
 
         .menu a {
-            color: #1ac95d; /* Texto branco */
-            text-decoration: none; /* Sem sublinhado */
-            padding: 10px 15px; /* Espaçamento interno dos links */
-            margin: 0 5px; /* Margem entre links */
-            border-radius: 4px; /* Bordas arredondadas */
-            transition: background-color 0.3s; /* Transição suave */
+            color: var(--verde-principal);
+            text-decoration: none;
+            padding: 10px 15px;
+            margin: 0 5px;
+            transition: background-color 0.3s;
         }
 
-        .menu a:hover {
-            background-color: rgba(255, 255, 255, 0.2); /* Cor de fundo ao passar o mouse */
+        .menu a:hover, .menu a.active {
+            background-color: rgba(26, 201, 93, 0.1);
         }
 
-        /* Estilo para o link ativo */
-        .menu a.active {
-            border-bottom: 2px solid #1ac95d;
-        }
-
+        /* Conteúdo */
         .content {
-            margin-top: 80px; /* Espaço abaixo da navbar */
+            margin-top: 80px;
             padding: 20px;
-            flex: 1; 
+            flex: 1;
         }
 
+        /* Tabela */
         #campanhasTable {
             width: 100%;
             border-collapse: collapse;
-            background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: var(--branco-fundo);
+            box-shadow: 0 4px 8px var(--sombra);
             border-radius: 8px;
             overflow: hidden;
         }
 
-        #campanhasTable th, #campanhasTable td {
-            padding: 15px;
-            text-align: left;
-        }
-
         #campanhasTable th {
-            background-color: #1ac95d; 
-            color: #fff;
+            background-color: var(--verde-principal);
+            color: var(--branco-fundo);
             font-weight: 600;
-            font-size: 16px;
+            padding: 15px;
             text-transform: uppercase;
         }
 
         #campanhasTable td {
-            color: #666;
+            padding: 15px;
+            color: var(--cinza-texto);
             border-bottom: 1px solid #e0e0e0;
         }
 
-        #campanhasTable tr:last-child td {
-            border-bottom: none;
+        /* Botões */
+        .edit-button, .save-button {
+            background-color: var(--verde-principal);
+            color: var(--branco-fundo);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
         }
 
-        #campanhasTable tr:hover {
-            background-color: #f9f9f9;
+        .edit-button:hover, .save-button:hover {
+            background-color: #148c47;
+        }
+
+        /* Popup */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--branco-fundo);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--sombra);
+            width: 300px;
+            text-align: center;
+            display: none;
+            z-index: 2000;
+        }
+
+        .popup h2 {
+            color: var(--verde-principal);
+            margin-bottom: 10px;
+        }
+
+        .popup button {
+            background-color: var(--verde-principal);
+            color: var(--branco-fundo);
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .popup button:hover {
+            background-color: #148c47;
         }
 
         /* Responsivo */
         @media (max-width: 768px) {
             #campanhasTable th, #campanhasTable td {
-                padding: 10px; 
+                padding: 10px;
             }
 
             .navbar {
-                flex-direction: column; /* Empilha os itens da navbar em telas pequenas */
+                flex-direction: column;
             }
 
             .menu {
-                flex-direction: column; /* Alinha os links verticalmente */
+                flex-direction: column;
             }
         }
     </style>
@@ -140,7 +169,6 @@
     </div>
 
     <div class="content">
-        <!-- Tabela de campanhas -->
         <table id="campanhasTable">
             <thead>
                 <tr>
@@ -152,14 +180,20 @@
                     <th>Causa</th>
                     <th>Data Início</th>
                     <th>Data Fim</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
     </div>
 
+    <!-- Popup de feedback -->
+    <div id="popup" class="popup">
+        <h2>Campanha atualizada com sucesso!</h2>
+        <button onclick="fecharPopup()">OK</button>
+    </div>
+
     <script>
-        // Função para buscar e exibir as campanhas
         async function carregarCampanhas() {
             try {
                 const response = await fetch('/api/campanhas');
@@ -179,6 +213,7 @@
                         <td data-label="Causa">${campanha.causa}</td>
                         <td data-label="Data Início">${campanha.dataInicio}</td>
                         <td data-label="Data Fim">${campanha.dataFim}</td>
+                        <td><button class="edit-button" onclick="tornarEditavel(${campanha.id}, this)">Editar</button></td>
                     `;
                     tbody.appendChild(tr);
                 });
@@ -187,10 +222,64 @@
             }
         }
 
-        // Carrega as campanhas ao abrir a página
+        function tornarEditavel(id, button) {
+            const row = button.closest('tr');
+            const cells = row.querySelectorAll('td:not(:first-child):not(:last-child)');
+
+            cells.forEach(cell => {
+                const currentValue = cell.textContent;
+                cell.innerHTML = `<input type="text" value="${currentValue}" />`;
+            });
+
+            button.textContent = 'Salvar';
+            button.onclick = () => salvarCampanha(id, row);
+        }
+
+        async function salvarCampanha(id, row) {
+            const inputs = row.querySelectorAll('input');
+            const campanhaAtualizada = {
+                id: id,
+                nome: inputs[0].value,
+                descricao: inputs[1].value,
+                meta: parseFloat(inputs[2].value),
+                valorArrecadado: parseFloat(inputs[3].value),
+                causa: inputs[4].value,
+                dataInicio: inputs[5].value,
+                dataFim: inputs[6].value
+            };
+
+            try {
+                const response = await fetch(`/api/campanhas/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(campanhaAtualizada)
+                });
+
+                if (response.ok) {
+                    mostrarPopup();
+                    carregarCampanhas();
+                } else {
+                    alert('Erro ao atualizar a campanha.');
+                }
+            } catch (error) {
+                console.error('Erro ao salvar a campanha:', error);
+            }
+        }
+
+        function mostrarPopup() {
+            const popup = document.getElementById('popup');
+            popup.style.display = 'block';
+        }
+
+        function fecharPopup() {
+            const popup = document.getElementById('popup');
+            popup.style.display = 'none';
+        }
+
         window.onload = carregarCampanhas;
 
-        // Identifica o link da página atual e adiciona a classe 'active'
         document.addEventListener("DOMContentLoaded", function() {
             const currentPath = window.location.pathname;
 
