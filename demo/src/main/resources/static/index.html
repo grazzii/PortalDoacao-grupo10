@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campanhas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset básico */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { font-family: 'Roboto', sans-serif; background-color: #f4f4f4; color: #1a1a1a; line-height: 1.6; display: flex; flex-direction: column; }
+        
+        .navbar { background-color: #ffffff; font-weight: 600; width: 100%; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 0 0 8px 8px; position: fixed; top: 0; z-index: 1000; }
+        
+        .navbar h1 { color: #1ac95d; font-size: 1.5em; }
+        
+        .menu { display: flex; }
+        
+        .menu a { color: #1ac95d; text-decoration: none; padding: 10px 15px; margin: 0 5px; border-radius: 4px; transition: background-color 0.3s; }
+        
+        .menu a:hover { background-color: rgba(255, 255, 255, 0.2); }
+        
+        .content { margin-top: 80px; padding: 20px; flex: 1; }
+        
+        #campanhasTable { width: 100%; border-collapse: collapse; background-color: #ffffff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden; }
+        
+        #campanhasTable th, #campanhasTable td { padding: 15px; text-align: left; }
+        
+        #campanhasTable th { background-color: #1ac95d; color: #fff; font-weight: 600; font-size: 16px; text-transform: uppercase; }
+        
+        #campanhasTable td { color: #666; border-bottom: 1px solid #e0e0e0; }
+        
+        #campanhasTable tr:last-child td { border-bottom: none; }
+        
+        #campanhasTable tr:hover { background-color: #1ac95d; }
+        
+        .doar-btn { padding: 8px 16px; background-color: #1ac95d; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; }
+        
+        .doar-btn:hover { background-color: #16a94d; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Ajudaê</h1>
+        <div class="menu">
+            <a href="../index.html">Home</a>
+            <a href="../adm/adm.html">Adm</a>
+            <a href="../funciona/como-funciona.html">Como Funciona</a>
+            <a href="../login/login.html">Login</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- Tabela de campanhas -->
+        <table id="campanhasTable">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Meta</th>
+                    <th>Valor Arrecadado</th>
+                    <th>Causa</th>
+                    <th>Data Início</th>
+                    <th>Data Fim</th>
+                    <th>Doe</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        // Função para buscar e exibir as campanhas com IDs corretos
+        async function carregarCampanhas() {
+            try {
+                const response = await fetch('http://localhost:8087/api/campanhas');
+                const campanhas = await response.json();
+                console.log(campanhas); // Verifique a resposta da API
+
+                const tbody = document.querySelector('#campanhasTable tbody');
+                tbody.innerHTML = '';
+
+                campanhas.forEach(campanha => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td data-label="Nome">${campanha.nome}</td>
+                        <td data-label="Descrição">${campanha.descricao}</td>
+                        <td data-label="Meta">${campanha.meta}</td>
+                        <td data-label="Valor Arrecadado">${campanha.valorArrecadado}</td>
+                        <td data-label="Causa">${campanha.causa}</td>
+                        <td data-label="Data Início">${campanha.dataInicio}</td>
+                        <td data-label="Data Fim">${campanha.dataFim}</td>
+                        <td>
+                            <input type="number" min="1" placeholder="Valor" id="donationValue-${campanha.id}" />
+                            <button class="doar-btn" onclick="doarParaCampanha(${campanha.id})">Doar</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar as campanhas:', error);
+            }
+        }
+
+        async function doarParaCampanha(id) {
+    let valor = document.getElementById(`donationValue-${id}`).value;
+    valor = valor.replace(',', '.');
+
+    if (parseFloat(valor) <= 0 || isNaN(parseFloat(valor))) {
+        alert("Por favor, insira um valor válido para a doação (maior que 0).");
+        return;
+    }
+
+    const valorEnviado = parseFloat(valor).toFixed(2);
+    console.log("Valor enviado para atualização:", valorEnviado);
+
+    try {
+        // Obtenha todos os dados da campanha
+        const responseCampanha = await fetch(`http://localhost:8087/api/campanhas/${id}`);
+        
+        if (!responseCampanha.ok) {
+            alert("Campanha não encontrada.");
+            return;
+        }
+
+        const campanha = await responseCampanha.json();
+        console.log("Dados completos da campanha:", campanha);
+
+        // Atualize o campo `valorArrecadado`
+        campanha.valorArrecadado = (parseFloat(campanha.valorArrecadado) + parseFloat(valorEnviado)).toFixed(2);
+
+        // Envie todos os dados da campanha no PUT
+        const response = await fetch(`http://localhost:8087/api/campanhas/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(campanha)
+        });
+
+        if (response.ok) {
+            alert('Doação realizada com sucesso!');
+            carregarCampanhas();
+        } else {
+            const errorText = await response.text();
+            console.error('Erro ao realizar doação:', errorText);
+            alert('Erro ao realizar doação. Verifique os dados e tente novamente.');
+        }
+    } catch (error) {
+        console.error('Erro ao processar a doação:', error);
+        alert('Ocorreu um erro ao processar a doação. Tente novamente mais tarde.');
+    }
+}
+
+        // Carrega as campanhas ao abrir a página
+        window.onload = carregarCampanhas;
+    </script>
+</body>
+</html>
