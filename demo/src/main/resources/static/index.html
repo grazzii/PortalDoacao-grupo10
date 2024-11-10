@@ -6,7 +6,6 @@
     <title>Campanhas</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Reset básico */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { font-family: 'Roboto', sans-serif; background-color: #f4f4f4; color: #1a1a1a; line-height: 1.6; display: flex; flex-direction: column; }
@@ -21,45 +20,34 @@
         
         .menu a:hover { background-color: rgba(255, 255, 255, 0.2); }
 
-        /* Estilo para o link ativo */
-        .menu a.active {
-            border-bottom: 2px solid #1ac95d;
-            
-        }
-        
-        .content { margin-top: 80px; padding: 20px; flex: 1; }
-        
-        #campanhasTable { width: 100%; border-collapse: collapse; background-color: #ffffff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden; }
-        
-        #campanhasTable th, #campanhasTable td { padding: 15px; text-align: left; }
-        
-        #campanhasTable th { background-color: #1ac95d; color: #fff; font-weight: 600; font-size: 16px; text-transform: uppercase; }
-        
-        #campanhasTable td { color: #666; border-bottom: 1px solid #e0e0e0; }
-        
-        #campanhasTable tr:last-child td { border-bottom: none; }
-        
-        #campanhasTable tr:hover { background-color: #f9f9f9; }
+        .menu a.active { border-bottom: 2px solid #1ac95d; }
 
-        .doar-input {
-            width: 80px;
-            padding: 6px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-            color: #333;
+        .content { margin-top: 80px; padding: 20px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+
+        .campanha-card {
+            background-color: #ffffff;
+            width: 300px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
             text-align: center;
-            margin-right: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
-        .doar-input:focus {
-            outline: none;
-            border-color: #1ac95d;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        .campanha-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
         }
 
+        .campanha-info {
+            padding: 15px;
+            color: #333;
+        }
+
+        .campanha-info h2 { font-size: 1.2em; color: #1ac95d; margin-bottom: 10px; }
+
+        .doar-input { width: 80px; padding: 6px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; text-align: center; margin-right: 8px; }
+        
         .doar-btn {
             padding: 8px 20px;
             background-color: #1ac95d;
@@ -69,70 +57,17 @@
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         }
 
-        .doar-btn:hover {
-            background-color: #16a94d;
-            transform: scale(1.05);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Estilos para o popup */
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            text-align: center;
-            z-index: 2000;
-        }
+        .popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); padding: 20px; text-align: center; z-index: 2000; }
         
-        .popup h2 {
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
+        .popup.success { border: 2px solid #1ac95d; }
+        
+        .popup.error { border: 2px solid #ff4d4d; }
+        
+        .popup button { margin-top: 15px; padding: 8px 20px; background-color: #1ac95d; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
 
-        .popup.success {
-            border: 2px solid #1ac95d;
-        }
-
-        .popup.error {
-            border: 2px solid #ff4d4d;
-        }
-
-        .popup button {
-            margin-top: 15px;
-            padding: 8px 20px;
-            background-color: #1ac95d;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .popup button:hover {
-            background-color: #16a94d;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; }
     </style>
 </head>
 <body>
@@ -146,25 +81,8 @@
         </div>
     </div>
 
-    <div class="content">
-        <table id="campanhasTable">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Descrição</th>
-                    <th>Meta</th>
-                    <th>Valor Arrecadado</th>
-                    <th>Causa</th>
-                    <th>Data Início</th>
-                    <th>Data Fim</th>
-                    <th>Doe</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
+    <div class="content" id="campanhasContainer"></div>
 
-    <!-- Overlay and Popup -->
     <div class="overlay" id="overlay"></div>
     <div class="popup" id="popup">
         <h2 id="popupTitle"></h2>
@@ -175,28 +93,27 @@
     <script>
         async function carregarCampanhas() {
             try {
-                const response = await fetch('http://localhost:8087/api/campanhas');
+                const response = await fetch('/api/campanhas');
                 const campanhas = await response.json();
 
-                const tbody = document.querySelector('#campanhasTable tbody');
-                tbody.innerHTML = '';
+                const container = document.getElementById('campanhasContainer');
+                container.innerHTML = '';
 
                 campanhas.forEach(campanha => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td data-label="Nome">${campanha.nome}</td>
-                        <td data-label="Descrição">${campanha.descricao}</td>
-                        <td data-label="Meta">${campanha.meta}</td>
-                        <td data-label="Valor Arrecadado">${campanha.valorArrecadado}</td>
-                        <td data-label="Causa">${campanha.causa}</td>
-                        <td data-label="Data Início">${campanha.dataInicio}</td>
-                        <td data-label="Data Fim">${campanha.dataFim}</td>
-                        <td>
+                    const card = document.createElement('div');
+                    card.className = 'campanha-card';
+                    card.innerHTML = `
+                        <img src="https://via.placeholder.com/300x180" alt="${campanha.nome}">
+                        <div class="campanha-info">
+                            <h2>${campanha.nome}</h2>
+                            <p>${campanha.descricao}</p>
+                            <p><strong>Meta:</strong> R$ ${campanha.meta}</p>
+                            <p><strong>Arrecadado:</strong> R$ <span id="valorArrecadado-${campanha.id}">${campanha.valorArrecadado}</span></p>
                             <input type="number" min="1" placeholder="Valor" id="donationValue-${campanha.id}" class="doar-input"/>
                             <button class="doar-btn" onclick="doarParaCampanha(${campanha.id})">Doar</button>
-                        </td>
+                        </div>
                     `;
-                    tbody.appendChild(tr);
+                    container.appendChild(card);
                 });
             } catch (error) {
                 showPopup("Erro", "Erro ao carregar as campanhas. Tente novamente mais tarde.", "error");
@@ -204,9 +121,9 @@
         }
 
         async function doarParaCampanha(id) {
-            let valor = document.getElementById(`donationValue-${id}`).value;
-            valor = valor.replace(',', '.');
-
+            const valorInput = document.getElementById(`donationValue-${id}`);
+            let valor = valorInput.value.replace(',', '.');
+            
             if (parseFloat(valor) <= 0 || isNaN(parseFloat(valor))) {
                 showPopup("Erro", "Por favor, insira um valor válido para a doação (maior que 0).", "error");
                 return;
@@ -215,7 +132,7 @@
             const valorEnviado = parseFloat(valor).toFixed(2);
 
             try {
-                const responseCampanha = await fetch(`http://localhost:8087/api/campanhas/${id}`);
+                const responseCampanha = await fetch(`/api/campanhas/${id}`);
                 if (!responseCampanha.ok) {
                     showPopup("Erro", "Campanha não encontrada.", "error");
                     return;
@@ -224,7 +141,7 @@
                 const campanha = await responseCampanha.json();
                 campanha.valorArrecadado = (parseFloat(campanha.valorArrecadado) + parseFloat(valorEnviado)).toFixed(2);
 
-                const response = await fetch(`http://localhost:8087/api/campanhas/${id}`, {
+                const response = await fetch(`/api/campanhas/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(campanha)
@@ -232,7 +149,8 @@
 
                 if (response.ok) {
                     showPopup("Sucesso", "Doação realizada com sucesso!", "success");
-                    carregarCampanhas();
+                    document.getElementById(`valorArrecadado-${id}`).textContent = campanha.valorArrecadado;
+                    valorInput.value = '';
                 } else {
                     showPopup("Erro", "Erro ao realizar doação. Verifique os dados e tente novamente.", "error");
                 }
