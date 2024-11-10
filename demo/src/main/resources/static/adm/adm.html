@@ -66,6 +66,11 @@
             background-color: rgba(255, 255, 255, 0.2); /* Cor de fundo ao passar o mouse */
         }
 
+        /* Estilo para o link ativo */
+        .menu a.active {
+            border-bottom: 2px solid #1ac95d;
+        }
+
         .content {
             margin-top: 80px; /* Espaço abaixo da navbar */
             padding: 20px;
@@ -184,6 +189,21 @@
 
         // Carrega as campanhas ao abrir a página
         window.onload = carregarCampanhas;
+
+        // Identifica o link da página atual e adiciona a classe 'active'
+        document.addEventListener("DOMContentLoaded", function() {
+            const currentPath = window.location.pathname;
+
+            if (currentPath.includes("index.html")) {
+                document.querySelector(".menu a[href*='index.html']").classList.add("active");
+            } else if (currentPath.includes("adm.html")) {
+                document.querySelector(".menu a[href*='adm.html']").classList.add("active");
+            } else if (currentPath.includes("como-funciona.html")) {
+                document.querySelector(".menu a[href*='como-funciona.html']").classList.add("active");
+            } else if (currentPath.includes("login.html")) {
+                document.querySelector(".menu a[href*='login.html']").classList.add("active");
+            }
+        });
     </script>
 </body>
 </html>
