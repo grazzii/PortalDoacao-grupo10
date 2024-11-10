@@ -113,7 +113,7 @@
                     card.className = 'campanha-card';
 
                     // Define a imagem a ser usada: imagem da campanha ou uma alternativa da lista
-                    const imagemUrl = campanha.imagemUrl || imagensAlternativas[index % imagensAlternativas.length];
+                    const imagemUrl = campanha.imagemUrl || imagensAlternativas[campanha.id % imagensAlternativas.length];
 
                     card.innerHTML = `
                         <img src="${imagemUrl}" alt="${campanha.nome}">
@@ -132,8 +132,6 @@
                 showPopup("Erro", "Erro ao carregar as campanhas. Tente novamente mais tarde.", "error");
             }
         }
-
-
 
         async function doarParaCampanha(id) {
             const valorInput = document.getElementById(`donationValue-${id}`);
