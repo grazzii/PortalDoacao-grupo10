@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/Ajudaê.ico" type="image/x-icon">
-    <title>Página de Login</title>
+    <title>Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* Estilos principais */
@@ -36,17 +36,19 @@
         /* Navbar */
         .navbar {
             background-color: #ffffff;
+            font-weight: 600;
             width: 100%;
             padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-radius: 0 0 8px 8px;
-            position: absolute;
+            position: fixed;
             top: 0;
             z-index: 1000;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .navbar h1 {
             color: #1ac95d;
             font-size: 1.5em;
@@ -197,7 +199,9 @@
 
         .logo {
             text-decoration: none;
-            color: inherit;
+            color: #1ac95d;
+            font-size: 1.5em;
+            transition: color 0.3s ease;
         } 
 
         /* Responsivo */

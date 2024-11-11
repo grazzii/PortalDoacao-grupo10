@@ -11,7 +11,20 @@
         
         body { font-family: 'Roboto', sans-serif; background-color: #f4f4f4; color: #1a1a1a; line-height: 1.6; display: flex; flex-direction: column; }
         
-        .navbar { background-color: #ffffff; font-weight: 600; width: 100%; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 0 0 8px 8px; position: fixed; top: 0; z-index: 1000; }
+        .navbar {
+            background-color: #ffffff;
+            font-weight: 600;
+            width: 100%;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0 0 8px 8px;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
         
         .navbar h1 { color: #1ac95d; font-size: 1.5em; }
         
@@ -89,8 +102,10 @@
         
         .logo {
             text-decoration: none;
-            color: inherit;
-        }
+            color: #1ac95d;
+            font-size: 1.5em;
+            transition: color 0.3s ease;
+        } 
 
         .popup img {
             display: block;
