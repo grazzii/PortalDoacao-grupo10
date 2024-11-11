@@ -196,7 +196,7 @@
                 });
 
                 if (response.ok) {
-                    showPopup("Sucesso", "Transfira e ajude a melhorar o mundo", "success");
+                    showPopup("Escaneie o QR Code", "Transfira e ajude a melhorar o mundo!", "success");
                     document.getElementById(`valorArrecadado-${id}`).textContent = campanha.valorArrecadado;
                     valorInput.value = '';
                     carregarCampanhas();
@@ -218,7 +218,7 @@
             document.getElementById("popupMessage").textContent = message;
 
             if (type === "success") {
-                popupImage.src = "/vakinhaqrcode.png"; // Caminho da imagem
+                popupImage.src = "/qrcode.png"; // Caminho da imagem
                 popupImage.style.display = "block";
             } else {
                 popupImage.style.display = "none";
