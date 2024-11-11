@@ -123,7 +123,7 @@
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #138c4a;
+            background-color: #69b686;
         }
         .footer {
             text-align: center;
@@ -159,7 +159,6 @@
             width: 90%;
             max-width: 400px;
             text-align: center;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
             z-index: 1001;
             animation: fadeIn 0.4s ease-in-out;
         }
@@ -170,25 +169,25 @@
         }
         .close-btn {
             position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 20px; /* Ajuste o tamanho conforme necessário */
-    color: #000;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-    line-height: 1;
-    width: auto;
-    height: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.close-btn:hover {
-    color: #666; /* Sutil mudança de cor ao passar o mouse */
-}
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            color: #1ac95d;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            line-height: 1;
+            width: auto;
+            height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .close-btn:hover {
+            color: #ffffff;
+        }
 
         /* Animação de fade-in */
         @keyframes fadeIn {
@@ -256,6 +255,13 @@
         </form>
     </div>
 
+    <!-- Fundo embacado e pop-up de erro de login -->
+    <div class="overlay" id="errorOverlay"></div>
+    <div class="error-popup" id="errorPopup">
+        <button class="close-btn" onclick="fecharPopupErro()">✕</button>
+        <p>Login incorreto! Tente novamente.</p>
+    </div>
+
     <script>
         // Função para autenticar o usuário
         document.getElementById('loginForm').addEventListener('submit', function(event) {
@@ -273,8 +279,14 @@
 
         // Função para exibir o pop-up de erro e o fundo embacado
         function mostrarPopupErro() {
-            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('errorOverlay').style.display = 'block';
             document.getElementById('errorPopup').style.display = 'block';
+        }
+
+        // Função para fechar o pop-up de erro
+        function fecharPopupErro() {
+            document.getElementById('errorOverlay').style.display = 'none';
+            document.getElementById('errorPopup').style.display = 'none';
         }
 
         // Função para abrir o card de recuperação de senha
