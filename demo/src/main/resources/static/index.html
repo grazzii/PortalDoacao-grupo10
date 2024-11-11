@@ -47,7 +47,7 @@
 
         .campanha-info h2 { font-size: 1.2em; color: #1ac95d; margin-bottom: 10px; }
 
-        .doar-input { width: 80px; padding: 6px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; text-align: center; margin-right: 8px; }
+        .doar-input { width: 120px; padding: 6px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; text-align: center; margin-right: 8px; }
         
         .doar-btn {
             padding: 8px 20px;
@@ -157,7 +157,7 @@
                             <div class="progress-bar">
                                 <div class="progress" style="width: ${porcentagem}%;"></div>
                             </div>
-                            <input type="number" min="1" placeholder="Valor" id="donationValue-${campanha.id}" class="doar-input"/>
+                            <input type="number" min="1" placeholder="R$ Valor" id="donationValue-${campanha.id}" class="doar-input"/>
                             <button class="doar-btn" onclick="doarParaCampanha(${campanha.id})">Doar</button>
                         </div>
                     `;
