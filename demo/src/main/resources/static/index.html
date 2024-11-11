@@ -92,6 +92,12 @@
             color: inherit;
         }
 
+        .popup img {
+            display: block;
+            margin: 0 auto 10px;
+            width: 200px;
+            height: 200px;
+        }
     </style>
 </head>
 <body>
@@ -111,6 +117,7 @@
 
     <div class="overlay" id="overlay"></div>
     <div class="popup" id="popup">
+        <img id="popupImage" src="" alt="" style="display:none;">
         <h2 id="popupTitle"></h2>
         <p id="popupMessage"></p>
         <button onclick="closePopup()">Fechar</button>
@@ -189,7 +196,7 @@
                 });
 
                 if (response.ok) {
-                    showPopup("Sucesso", "Doação realizada com sucesso!", "success");
+                    showPopup("Sucesso", "Transfira e ajude a melhorar o mundo", "success");
                     document.getElementById(`valorArrecadado-${id}`).textContent = campanha.valorArrecadado;
                     valorInput.value = '';
                     carregarCampanhas();
@@ -204,9 +211,19 @@
         function showPopup(title, message, type) {
             const popup = document.getElementById("popup");
             const overlay = document.getElementById("overlay");
+            const popupImage = document.getElementById("popupImage");
+
             popup.className = `popup ${type}`;
             document.getElementById("popupTitle").textContent = title;
             document.getElementById("popupMessage").textContent = message;
+
+            if (type === "success") {
+                popupImage.src = "/vakinhaqrcode.png"; // Caminho da imagem
+                popupImage.style.display = "block";
+            } else {
+                popupImage.style.display = "none";
+            }
+
             popup.style.display = "block";
             overlay.style.display = "block";
         }
