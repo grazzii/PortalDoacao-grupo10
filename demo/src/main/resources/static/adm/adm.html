@@ -111,6 +111,14 @@
             cursor: pointer;
         }
 
+        #container-insert-btn {
+            text-align: center;
+        }
+
+        .insert-btn {
+            margin: 0 auto;
+        }
+
         .form-popup {
             display: none;
             position: fixed;
@@ -171,7 +179,9 @@
         <!-- Cards de campanhas serão carregados aqui -->
     </div>
 
-    <button class="insert-btn" onclick="abrirFormularioInserir()">Inserir Nova Campanha</button>
+    <div id="container-insert-btn">
+        <button class="insert-btn" onclick="abrirFormularioInserir()">Inserir Nova Campanha</button>
+    </div>
 
     <div class="overlay" onclick="fecharFormulario()"></div>
 
