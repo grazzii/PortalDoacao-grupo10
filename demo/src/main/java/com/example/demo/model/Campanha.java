@@ -27,10 +27,6 @@ public class Campanha {
 
     private LocalDate dataFim;
 
-    @ManyToOne // Relacionamento Many-to-One com Categoria
-    @JoinColumn(name = "id_categoria", nullable = false) // Define a coluna da chave estrangeira
-    private Categoria categoria;
-
     // Construtor sem parâmetros
     public Campanha() {}
 
@@ -44,7 +40,6 @@ public class Campanha {
         this.causa = causa;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
-        this.categoria = categoria;
     }
 
     // Getters e Setters
@@ -73,9 +68,6 @@ public class Campanha {
 
     public LocalDate getDataFim() { return dataFim; }
     public void setDataFim(LocalDate dataFim) { this.dataFim = dataFim; }
-
-    public Categoria getCategoria() { return categoria; }
-    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
 
     // Método para somar o valor da doação ao valor arrecadado
     public void doar(BigDecimal valor) {

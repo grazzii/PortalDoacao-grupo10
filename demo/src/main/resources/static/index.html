@@ -170,7 +170,7 @@
                     'imagens/agasalho.png'
                 ];
 
-                campanhas.forEach((campanha, categoria, index) => {
+                campanhas.forEach((campanha, index) => {
                     const card = document.createElement('div');
                     card.className = 'campanha-card';
 
@@ -185,7 +185,6 @@
                         <div class="campanha-info">
                             <h2>${campanha.nome}</h2>
                             <p>${campanha.descricao}</p>
-                            <p><strong>Categoria:</strong> ${categoria.categoria || 'Não especificado'}</p>
                             <p><strong>Meta:</strong> R$ ${campanha.meta}</p>
                             <p><strong>Arrecadado:</strong> R$ <span id="valorArrecadado-${campanha.id}">${campanha.valorArrecadado}</span></p>
                             <p>${porcentagem}%</p>
