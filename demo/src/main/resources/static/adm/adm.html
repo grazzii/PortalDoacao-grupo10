@@ -56,10 +56,6 @@
             transition: background-color 0.3s;
         }
 
-        .menu a.active {
-            border-bottom: 2px solid #1ac95d;
-        }
-
         .content {
             margin-top: 80px;
             padding: 20px;
@@ -88,26 +84,24 @@
             margin-bottom: 10px;
         }
 
-        .campanha-card p {
-            color: #666;
-            margin-bottom: 8px;
-            font-size: 0.9em;
-        }
-
-        .campanha-card .meta, .campanha-card .valorArrecadado {
-            font-weight: bold;
-        }
-
-        .edit-btn, .insert-btn {
+        .edit-btn, .insert-btn, .delete-btn {
             padding: 8px 15px;
             margin: 5px;
-            background-color: #1ac95d;
-            color: white;
             font-size: 14px;
             font-weight: bold;
             border: none;
             border-radius: 6px;
             cursor: pointer;
+        }
+
+        .edit-btn {
+            background-color: #1ac95d;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: #ff4d4d;
+            color: white;
         }
 
         #container-insert-btn {
@@ -116,6 +110,8 @@
 
         .insert-btn {
             margin: 0 auto;
+            background-color: #1ac95d;
+            color: white;
         }
 
         .form-popup {
@@ -149,7 +145,54 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
             z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            z-index: 2000;
+        }
+
+        .popup.error { border: 2px solid #ff4d4d; }
+        
+        .popup p {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .popup button {
+            margin-top: 15px;
+            padding: 8px 20px;
+            background-color: #1ac95d;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .cancel-btn {
+            background-color: #ff4d4d;
+            color: white;
+            padding: 8px 15px;
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
         }
 
         .logo {
@@ -178,11 +221,17 @@
         <button class="insert-btn" onclick="abrirFormularioInserir()">Inserir Nova Campanha</button>
     </div>
 
-    <div class="overlay" onclick="fecharFormulario()"></div>
+    <div class="overlay" id="confirmationOverlay">
+        <div class="popup error">
+            <p>Tem certeza que deseja excluir esta campanha?</p>
+            <button onclick="confirmarExclusao()">Sim</button>
+            <button class="cancel-btn" onclick="fecharConfirmacao()">Não</button>
+        </div>
+    </div>
 
-    <!-- Formulário de edição/inserção -->
+    <!-- Formulário de criação e edição de campanha -->
     <div class="form-popup" id="formCampanha">
-        <h2 id="formTitulo">Editar Campanha</h2>
+        <h2 id="formTitulo">Inserir Nova Campanha</h2>
         <input type="hidden" id="campanhaId">
         <input type="text" id="campanhaNome" placeholder="Nome da Campanha">
         <textarea id="campanhaDescricao" placeholder="Descrição da Campanha"></textarea>
@@ -195,6 +244,8 @@
     </div>
 
     <script>
+        let campanhaParaExcluir;
+
         async function carregarCampanhas() {
             try {
                 const response = await fetch('/api/campanhas');
@@ -216,6 +267,7 @@
                         <p><strong>Data Início:</strong> ${campanha.dataInicio}</p>
                         <p><strong>Data Fim:</strong> ${campanha.dataFim}</p>
                         <button class="edit-btn" onclick="abrirFormularioEditar(${campanha.id})">Editar</button>
+                        <button class="delete-btn" onclick="mostrarConfirmacao(${campanha.id})">Excluir</button>
                     `;
                     container.appendChild(card);
                 });
@@ -224,11 +276,9 @@
             }
         }
 
-        function abrirFormularioEditar(id) {
-            document.getElementById('formTitulo').innerText = 'Editar Campanha';
-            document.getElementById('campanhaId').value = id;
-
-            // Limpar campos do formulário antes de preenchê-los com os dados da campanha
+        function abrirFormularioInserir() {
+            document.getElementById('formTitulo').innerText = 'Inserir Nova Campanha';
+            document.getElementById('campanhaId').value = '';
             document.getElementById('campanhaNome').value = '';
             document.getElementById('campanhaDescricao').value = '';
             document.getElementById('campanhaMeta').value = '';
@@ -236,11 +286,15 @@
             document.getElementById('campanhaCausa').value = '';
             document.getElementById('campanhaDataInicio').value = '';
             document.getElementById('campanhaDataFim').value = '';
+            document.getElementById('formCampanha').style.display = 'block';
+        }
 
-            // Preencher campos com os dados da campanha selecionada para edição
+        function abrirFormularioEditar(id) {
             fetch(`/api/campanhas/${id}`)
                 .then(response => response.json())
                 .then(campanha => {
+                    document.getElementById('formTitulo').innerText = 'Editar Campanha';
+                    document.getElementById('campanhaId').value = id;
                     document.getElementById('campanhaNome').value = campanha.nome;
                     document.getElementById('campanhaDescricao').value = campanha.descricao;
                     document.getElementById('campanhaMeta').value = campanha.meta;
@@ -248,35 +302,12 @@
                     document.getElementById('campanhaCausa').value = campanha.causa;
                     document.getElementById('campanhaDataInicio').value = campanha.dataInicio;
                     document.getElementById('campanhaDataFim').value = campanha.dataFim;
-                });
-
-            document.querySelector('.overlay').style.display = 'block';
-            document.getElementById('formCampanha').style.display = 'block';
+                    document.getElementById('formCampanha').style.display = 'block';
+                })
+                .catch(error => console.error('Erro ao carregar a campanha para edição:', error));
         }
 
-        function abrirFormularioInserir() {
-            document.getElementById('formTitulo').innerText = 'Inserir Nova Campanha';
-            document.getElementById('campanhaId').value = '';
-
-            // Limpar todos os campos do formulário para criar uma nova campanha
-            document.getElementById('campanhaNome').value = '';
-            document.getElementById('campanhaDescricao').value = '';
-            document.getElementById('campanhaMeta').value = '';
-            document.getElementById('campanhaValorArrecadado').value = '';
-            document.getElementById('campanhaCausa').value = '';
-            document.getElementById('campanhaDataInicio').value = '';
-            document.getElementById('campanhaDataFim').value = '';
-
-            document.querySelector('.overlay').style.display = 'block';
-            document.getElementById('formCampanha').style.display = 'block';
-        }
-
-        function fecharFormulario() {
-            document.querySelector('.overlay').style.display = 'none';
-            document.getElementById('formCampanha').style.display = 'none';
-        }
-
-        async function salvarCampanha() {
+        function salvarCampanha() {
             const id = document.getElementById('campanhaId').value;
             const campanha = {
                 nome: document.getElementById('campanhaNome').value,
@@ -288,30 +319,54 @@
                 dataFim: document.getElementById('campanhaDataFim').value,
             };
 
-            try {
-                let response;
-                if (id) {
-                    response = await fetch(`/api/campanhas/${id}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(campanha)
-                    });
-                } else {
-                    response = await fetch('/api/campanhas', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(campanha)
-                    });
-                }
-
+            fetch(id ? `/api/campanhas/${id}` : '/api/campanhas', {
+                method: id ? 'PUT' : 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(campanha)
+            })
+            .then(response => {
                 if (response.ok) {
-                    fecharFormulario();
                     carregarCampanhas();
+                    fecharFormulario();
                 } else {
                     console.error('Erro ao salvar a campanha');
                 }
-            } catch (error) {
-                console.error('Erro ao salvar a campanha:', error);
+            })
+            .catch(error => console.error('Erro ao salvar a campanha:', error));
+        }
+
+        function fecharFormulario() {
+            document.getElementById('formCampanha').style.display = 'none';
+        }
+
+        function mostrarConfirmacao(id) {
+            campanhaParaExcluir = id;
+            document.getElementById('confirmationOverlay').style.display = 'flex';
+            document.querySelector('.popup.error').style.display = 'block';
+        }
+
+        function fecharConfirmacao() {
+            document.getElementById('confirmationOverlay').style.display = 'none';
+            document.querySelector('.popup.error').style.display = 'none';
+            campanhaParaExcluir = null;
+        }
+
+        async function confirmarExclusao() {
+            if (campanhaParaExcluir) {
+                try {
+                    const response = await fetch(`/api/campanhas/${campanhaParaExcluir}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        carregarCampanhas();
+                    } else {
+                        console.error('Erro ao excluir a campanha');
+                    }
+                } catch (error) {
+                    console.error('Erro ao excluir a campanha:', error);
+                }
+                fecharConfirmacao();
             }
         }
 
