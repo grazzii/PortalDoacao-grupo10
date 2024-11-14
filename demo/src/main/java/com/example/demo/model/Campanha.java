@@ -3,6 +3,7 @@ package com.example.demo.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,16 +11,25 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Campanha {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     private String nome;
+
     private String descricao;
+
+    @Column(precision = 10, scale = 2) // Para garantir a precisão do campo numérico
     private BigDecimal meta;
-    private BigDecimal valorArrecadado = BigDecimal.ZERO; // Inicializa com 0
+
+    @Column(precision = 10, scale = 2) // Inicializa com 0 para evitar valores nulos
+    private BigDecimal valorArrecadado = BigDecimal.ZERO;
+
     private String causa;
+
     private LocalDate dataInicio;
+
     private LocalDate dataFim;
 
     // Construtor sem parâmetros

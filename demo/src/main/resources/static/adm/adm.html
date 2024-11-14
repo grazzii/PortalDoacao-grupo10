@@ -56,7 +56,6 @@
             transition: background-color 0.3s;
         }
 
-        /* Estilo para link ativo */
         .menu a.active {
             border-bottom: 2px solid #1ac95d;
         }
@@ -81,11 +80,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: transform 0.3s;
-        }
-
-        .campanha-card:hover {
-            transform: translateY(-5px);
         }
 
         .campanha-card h3 {
@@ -137,12 +131,6 @@
             padding: 20px;
             text-align: center;
             z-index: 2000;
-            transition: all 0.3s ease;
-        }
-
-        .form-popup:hover {
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-            transform: translate(-50%, -50%) scale(1.05);
         }
 
         .form-popup input, .form-popup textarea {
@@ -170,7 +158,6 @@
             font-size: 1.5em;
             transition: color 0.3s ease;
         } 
-
     </style>
 </head>
 <body>
@@ -178,12 +165,6 @@
         <a href="../index.html" class="logo">
             <h1>Ajudaê</h1>
         </a>
-        <!-- <div class="menu">
-            <a href="../index.html" style="display: none;">Home</a>
-            <a href="../funciona/como-funciona.html" style="display: none;">Como Funciona</a>
-            <a href="../adm/adm.html" class="active">Adm</a>
-            <a href="../login/login.html">Sair</a>
-        </div> -->
         <div class="menu">
             <a href="../login/login.html">Sair</a>
         </div>
@@ -206,7 +187,7 @@
         <input type="text" id="campanhaNome" placeholder="Nome da Campanha">
         <textarea id="campanhaDescricao" placeholder="Descrição da Campanha"></textarea>
         <input type="number" id="campanhaMeta" placeholder="Meta">
-        <!-- <input type="number" id="campanhaValorArrecadado" placeholder="Valor Arrecadado"> -->
+        <input type="number" id="campanhaValorArrecadado" placeholder="Valor Arrecadado">
         <input type="text" id="campanhaCausa" placeholder="Causa">
         <input type="date" id="campanhaDataInicio">
         <input type="date" id="campanhaDataFim">
@@ -246,6 +227,29 @@
         function abrirFormularioEditar(id) {
             document.getElementById('formTitulo').innerText = 'Editar Campanha';
             document.getElementById('campanhaId').value = id;
+
+            // Limpar campos do formulário antes de preenchê-los com os dados da campanha
+            document.getElementById('campanhaNome').value = '';
+            document.getElementById('campanhaDescricao').value = '';
+            document.getElementById('campanhaMeta').value = '';
+            document.getElementById('campanhaValorArrecadado').value = '';
+            document.getElementById('campanhaCausa').value = '';
+            document.getElementById('campanhaDataInicio').value = '';
+            document.getElementById('campanhaDataFim').value = '';
+
+            // Preencher campos com os dados da campanha selecionada para edição
+            fetch(`/api/campanhas/${id}`)
+                .then(response => response.json())
+                .then(campanha => {
+                    document.getElementById('campanhaNome').value = campanha.nome;
+                    document.getElementById('campanhaDescricao').value = campanha.descricao;
+                    document.getElementById('campanhaMeta').value = campanha.meta;
+                    document.getElementById('campanhaValorArrecadado').value = campanha.valorArrecadado;
+                    document.getElementById('campanhaCausa').value = campanha.causa;
+                    document.getElementById('campanhaDataInicio').value = campanha.dataInicio;
+                    document.getElementById('campanhaDataFim').value = campanha.dataFim;
+                });
+
             document.querySelector('.overlay').style.display = 'block';
             document.getElementById('formCampanha').style.display = 'block';
         }
@@ -253,6 +257,16 @@
         function abrirFormularioInserir() {
             document.getElementById('formTitulo').innerText = 'Inserir Nova Campanha';
             document.getElementById('campanhaId').value = '';
+
+            // Limpar todos os campos do formulário para criar uma nova campanha
+            document.getElementById('campanhaNome').value = '';
+            document.getElementById('campanhaDescricao').value = '';
+            document.getElementById('campanhaMeta').value = '';
+            document.getElementById('campanhaValorArrecadado').value = '';
+            document.getElementById('campanhaCausa').value = '';
+            document.getElementById('campanhaDataInicio').value = '';
+            document.getElementById('campanhaDataFim').value = '';
+
             document.querySelector('.overlay').style.display = 'block';
             document.getElementById('formCampanha').style.display = 'block';
         }
@@ -268,7 +282,7 @@
                 nome: document.getElementById('campanhaNome').value,
                 descricao: document.getElementById('campanhaDescricao').value,
                 meta: parseFloat(document.getElementById('campanhaMeta').value),
-                // valorArrecadado: parseFloat(document.getElementById('campanhaValorArrecadado').value),
+                valorArrecadado: parseFloat(document.getElementById('campanhaValorArrecadado').value),
                 causa: document.getElementById('campanhaCausa').value,
                 dataInicio: document.getElementById('campanhaDataInicio').value,
                 dataFim: document.getElementById('campanhaDataFim').value,
@@ -277,14 +291,12 @@
             try {
                 let response;
                 if (id) {
-                    // Editar campanha existente
                     response = await fetch(`/api/campanhas/${id}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(campanha)
                     });
                 } else {
-                    // Inserir nova campanha
                     response = await fetch('/api/campanhas', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },

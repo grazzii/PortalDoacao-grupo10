@@ -39,14 +39,25 @@ public class CampanhaController {
     }
 
     @PostMapping
-    public ResponseEntity<Campanha> criarCampanha(@RequestBody Campanha novaCampanha) {
-        Campanha campanhaSalva = campanhaRepo.save(novaCampanha);
-        return ResponseEntity.status(HttpStatus.CREATED).body(campanhaSalva);
+    public ResponseEntity<?> criarCampanha(@RequestBody Campanha novaCampanha) {
+        try {
+            Campanha campanhaSalva = campanhaRepo.save(novaCampanha);
+            return ResponseEntity.status(HttpStatus.CREATED).body(campanhaSalva);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar a campanha: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public Campanha atualizarCampanha(@PathVariable Long id, @RequestBody Campanha campanhaAtualizada) {
-        return campanhaRepo.findById(id).map(campanha -> {
+    public ResponseEntity<?> atualizarCampanha(@PathVariable Long id, @RequestBody Campanha campanhaAtualizada) {
+        try {
+            Optional<Campanha> optionalCampanha = campanhaRepo.findById(id);
+            if (!optionalCampanha.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Campanha não encontrada");
+            }
+
+            Campanha campanha = optionalCampanha.get();
             campanha.setNome(campanhaAtualizada.getNome());
             campanha.setDescricao(campanhaAtualizada.getDescricao());
             campanha.setMeta(campanhaAtualizada.getMeta());
@@ -54,51 +65,43 @@ public class CampanhaController {
             campanha.setCausa(campanhaAtualizada.getCausa());
             campanha.setDataInicio(campanhaAtualizada.getDataInicio());
             campanha.setDataFim(campanhaAtualizada.getDataFim());
-            return campanhaRepo.save(campanha); // Atualiza a campanha
-        }).orElseThrow(() -> new RuntimeException("Campanha não encontrada com o ID: " + id));
-    }
 
-    @PutMapping("/{id}/doar")
-    @SuppressWarnings("CallToPrintStackTrace")
-    public ResponseEntity<String> updateValorArrecadado(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
-        System.out.println("Requisição PUT recebida para atualizar a campanha com ID: " + id);
-        System.out.println("Dados recebidos no body: " + updates);
-    
-        try {
-            Optional<Campanha> campanhaOptional = campanhaRepo.findById(id);
-            if (!campanhaOptional.isPresent()) {
-                System.out.println("Campanha não encontrada para o ID: " + id);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Campanha não encontrada");
-            }
-    
-            Campanha campanha = campanhaOptional.get();
-            System.out.println("Campanha encontrada: " + campanha);
-    
-            if (updates.containsKey("valorArrecadado")) {
-                BigDecimal novoValor = new BigDecimal(updates.get("valorArrecadado").toString());
-                System.out.println("Novo valor de arrecadação recebido: " + novoValor);
-    
-                campanha.setValorArrecadado(novoValor);
-                campanhaRepo.save(campanha);
-    
-                System.out.println("Valor atualizado com sucesso para: " + novoValor);
-                return ResponseEntity.ok("Valor atualizado com sucesso");
-            } else {
-                System.out.println("Campo 'valorArrecadado' não encontrado no body.");
-                return ResponseEntity.badRequest().body("Campo 'valorArrecadado' não encontrado");
-            }
-    
-        } catch (NumberFormatException e) {
-            System.out.println("Erro de formatação numérica no valor de arrecadação.");
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Formato de número inválido para valorArrecadado");
+            campanhaRepo.save(campanha);
+            return ResponseEntity.ok(campanha);
         } catch (Exception e) {
-            System.out.println("Erro interno ao atualizar a campanha:");
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar a campanha");
         }
     }
-    
+
+    @PutMapping("/{id}/doar")
+    public ResponseEntity<String> updateValorArrecadado(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        try {
+            Optional<Campanha> campanhaOptional = campanhaRepo.findById(id);
+            if (!campanhaOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Campanha não encontrada");
+            }
+
+            Campanha campanha = campanhaOptional.get();
+
+            if (updates.containsKey("valorArrecadado")) {
+                BigDecimal novoValor = new BigDecimal(updates.get("valorArrecadado").toString());
+                campanha.setValorArrecadado(novoValor);
+                campanhaRepo.save(campanha);
+                return ResponseEntity.ok("Valor atualizado com sucesso");
+            } else {
+                return ResponseEntity.badRequest().body("Campo 'valorArrecadado' não encontrado");
+            }
+
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Formato de número inválido para valorArrecadado");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar a campanha");
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarCampanha(@PathVariable Long id) {
         if (!campanhaRepo.existsById(id)) {
