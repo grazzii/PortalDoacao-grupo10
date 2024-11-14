@@ -2,12 +2,7 @@ package com.example.demo.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Campanha {
@@ -32,19 +27,24 @@ public class Campanha {
 
     private LocalDate dataFim;
 
+    @ManyToOne // Relacionamento Many-to-One com Categoria
+    @JoinColumn(name = "categoria_id", nullable = false) // Define a coluna da chave estrangeira
+    private Categoria categoria;
+
     // Construtor sem parâmetros
     public Campanha() {}
 
     // Construtor com todos os parâmetros
-    public Campanha(Long id, String nome, String descricao, BigDecimal meta, BigDecimal valorArrecadado, String causa, LocalDate dataInicio, LocalDate dataFim) {
+    public Campanha(Long id, String nome, String descricao, BigDecimal meta, BigDecimal valorArrecadado, String causa, LocalDate dataInicio, LocalDate dataFim, Categoria categoria) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.meta = meta;
-        this.valorArrecadado = valorArrecadado != null ? valorArrecadado : BigDecimal.ZERO; // Garantir valor não nulo
+        this.valorArrecadado = valorArrecadado != null ? valorArrecadado : BigDecimal.ZERO;
         this.causa = causa;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
+        this.categoria = categoria;
     }
 
     // Getters e Setters
@@ -62,7 +62,6 @@ public class Campanha {
 
     public BigDecimal getValorArrecadado() { return valorArrecadado; }
     public void setValorArrecadado(BigDecimal valorArrecadado) {
-        // Garantir que o valor nunca seja nulo
         this.valorArrecadado = valorArrecadado != null ? valorArrecadado : BigDecimal.ZERO;
     }
 
@@ -74,6 +73,9 @@ public class Campanha {
 
     public LocalDate getDataFim() { return dataFim; }
     public void setDataFim(LocalDate dataFim) { this.dataFim = dataFim; }
+
+    public Categoria getCategoria() { return categoria; }
+    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
 
     // Método para somar o valor da doação ao valor arrecadado
     public void doar(BigDecimal valor) {

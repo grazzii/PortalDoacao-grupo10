@@ -240,6 +240,16 @@
         <input type="text" id="campanhaCausa" placeholder="Causa">
         <input type="date" id="campanhaDataInicio">
         <input type="date" id="campanhaDataFim">
+        <select id="campanhaCategoria" style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px; background-color: #f9f9f9; width: 90%; margin-bottom: 10px;">
+            <option value="">Selecione uma categoria</option>
+            <option value="criancas">Crianças</option>
+            <option value="educacao">Educação</option>
+            <option value="fome">Fome</option>
+            <option value="meioAmbiente">Meio Ambiente</option>
+            <option value="animais">Proteção Animal</option>
+            <option value="saude">Saúde</option>
+            <option value="outros">Outros</option>
+        </select>       
         <button class="edit-btn" onclick="salvarCampanha()">Salvar</button>
     </div>
 
@@ -286,6 +296,7 @@
             document.getElementById('campanhaCausa').value = '';
             document.getElementById('campanhaDataInicio').value = '';
             document.getElementById('campanhaDataFim').value = '';
+            document.getElementById('campanhaCategoria').value = '';
             document.getElementById('formCampanha').style.display = 'block';
         }
 
@@ -302,10 +313,21 @@
                     document.getElementById('campanhaCausa').value = campanha.causa;
                     document.getElementById('campanhaDataInicio').value = campanha.dataInicio;
                     document.getElementById('campanhaDataFim').value = campanha.dataFim;
+
+                    // Atualizando o valor da categoria para que a categoria selecionada apareça
+                    const categoriaSelect = document.getElementById('campanhaCategoria');
+                    categoriaSelect.value = campanha.categoria;
+
+                    // Garantir que o valor da categoria está sendo atribuído corretamente
+                    if (!categoriaSelect.value) {
+                        categoriaSelect.value = ''; // Caso não tenha categoria, deixar vazio
+                    }
+
                     document.getElementById('formCampanha').style.display = 'block';
                 })
                 .catch(error => console.error('Erro ao carregar a campanha para edição:', error));
         }
+
 
         function salvarCampanha() {
             const id = document.getElementById('campanhaId').value;
@@ -317,6 +339,7 @@
                 causa: document.getElementById('campanhaCausa').value,
                 dataInicio: document.getElementById('campanhaDataInicio').value,
                 dataFim: document.getElementById('campanhaDataFim').value,
+                categoria: document.getElementById('campanhaCategoria').value,
             };
 
             fetch(id ? `/api/campanhas/${id}` : '/api/campanhas', {

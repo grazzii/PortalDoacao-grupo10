@@ -146,50 +146,50 @@
 
     <script>
            async function carregarCampanhas() {
-        try {
-            const response = await fetch('/api/campanhas');
-            const campanhas = await response.json();
+            try {
+                const response = await fetch('/api/campanhas');
+                const campanhas = await response.json();
 
-            const container = document.getElementById('campanhasContainer');
-            container.innerHTML = '';
+                const container = document.getElementById('campanhasContainer');
+                container.innerHTML = '';
 
-            const imagensAlternativas = [
-                'imagens/criancas.png',
-                'imagens/fome.png',
-                'imagens/doencas.png',
-                'imagens/agasalho.png'
-            ];
+                const imagensAlternativas = [
+                    'imagens/criancas.png',
+                    'imagens/fome.png',
+                    'imagens/doencas.png',
+                    'imagens/agasalho.png'
+                ];
 
-            campanhas.forEach((campanha, index) => {
-                const card = document.createElement('div');
-                card.className = 'campanha-card';
+                campanhas.forEach((campanha, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'campanha-card';
 
-                const imagemUrl = campanha.imagemUrl || imagensAlternativas[campanha.id % imagensAlternativas.length];
-                const porcentagem = Math.floor((campanha.valorArrecadado / campanha.meta) * 100);
+                    const imagemUrl = campanha.imagemUrl || imagensAlternativas[campanha.id % imagensAlternativas.length];
+                    const porcentagem = Math.floor((campanha.valorArrecadado / campanha.meta) * 100);
 
-                const doacaoCompleta = campanha.valorArrecadado >= campanha.meta;
-                const botaoDoacaoEstilo = doacaoCompleta ? 'background-color: gray; cursor: not-allowed;' : 'background-color: #1ac95d;';
+                    const doacaoCompleta = campanha.valorArrecadado >= campanha.meta;
+                    const botaoDoacaoEstilo = doacaoCompleta ? 'background-color: gray; cursor: not-allowed;' : 'background-color: #1ac95d;';
 
-                card.innerHTML = `
-                    <img src="${imagemUrl}" alt="${campanha.nome}">
-                    <div class="campanha-info">
-                        <h2>${campanha.nome}</h2>
-                        <p>${campanha.descricao}</p>
-                        <p><strong>Meta:</strong> R$ ${campanha.meta}</p>
-                        <p><strong>Arrecadado:</strong> R$ <span id="valorArrecadado-${campanha.id}">${campanha.valorArrecadado}</span></p>
-                        <p>${porcentagem}%</p>
-                        <div class="progress-bar">
-                            <div class="progress" style="width: ${porcentagem}%;"></div>
+                    card.innerHTML = `
+                        <img src="${imagemUrl}" alt="${campanha.nome}">
+                        <div class="campanha-info">
+                            <h2>${campanha.nome}</h2>
+                            <p>${campanha.descricao}</p>
+                            <p><strong>Meta:</strong> R$ ${campanha.meta}</p>
+                            <p><strong>Arrecadado:</strong> R$ <span id="valorArrecadado-${campanha.id}">${campanha.valorArrecadado}</span></p>
+                            <p>${porcentagem}%</p>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: ${porcentagem}%;"></div>
+                            </div>
+                            <input type="number" min="1" placeholder="Valor R$" id="donationValue-${campanha.id}" class="doar-input" ${doacaoCompleta ? 'disabled' : ''}/>
+                            <button class="doar-btn" style="${botaoDoacaoEstilo}" onclick="doarParaCampanha(${campanha.id})" ${doacaoCompleta ? 'disabled' : ''}>Doar</button>
                         </div>
-                        <input type="number" min="1" placeholder="Valor R$" id="donationValue-${campanha.id}" class="doar-input" ${doacaoCompleta ? 'disabled' : ''}/>
-                        <button class="doar-btn" style="${botaoDoacaoEstilo}" onclick="doarParaCampanha(${campanha.id})" ${doacaoCompleta ? 'disabled' : ''}>Doar</button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        } catch (error) {
-            showPopup("Erro", "Erro ao carregar as campanhas. Tente novamente mais tarde.", "error");
-        }
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                showPopup("Erro", "Erro ao carregar as campanhas. Tente novamente mais tarde.", "error");
+            }
         }
 
         async function doarParaCampanha(id) {
