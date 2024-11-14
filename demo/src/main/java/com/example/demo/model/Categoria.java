@@ -14,9 +14,13 @@ public class Categoria {
 
     private String nome;
 
+    private String descricao;
+
+    private String categoria;
+
     public Categoria() {}
 
-    public Categoria(Long id, String nome) {
+    public Categoria(Long id, String nome, String descricao, String categoria) {
         this.id = id;
         this.nome = nome;
     }
@@ -27,4 +31,10 @@ public class Categoria {
 
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
+
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+
+    public String getCategoria() { return categoria; }
+    public void setCategoria(String categoria) { this.descricao = categoria; }
 }

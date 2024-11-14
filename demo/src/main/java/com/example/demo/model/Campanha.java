@@ -28,7 +28,7 @@ public class Campanha {
     private LocalDate dataFim;
 
     @ManyToOne // Relacionamento Many-to-One com Categoria
-    @JoinColumn(name = "categoria_id", nullable = false) // Define a coluna da chave estrangeira
+    @JoinColumn(name = "id_categoria", nullable = false) // Define a coluna da chave estrangeira
     private Categoria categoria;
 
     // Construtor sem parâmetros
