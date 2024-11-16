@@ -1,9 +1,8 @@
 package com.example.demo.controller;
 
-import java.math.BigDecimal;
-import java.util.Map;
+import com.example.demo.model.Campanha;
+import com.example.demo.repository.CampanhaRepo;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +14,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.example.demo.model.Campanha;
-import com.example.demo.repository.CampanhaRepo;
 
 @RestController
 @RequestMapping("/api/campanhas")
@@ -74,33 +70,6 @@ public class CampanhaController {
         }
     }
 
-    @PutMapping("/{id}/doar")
-    public ResponseEntity<String> updateValorArrecadado(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
-        try {
-            Optional<Campanha> campanhaOptional = campanhaRepo.findById(id);
-            if (!campanhaOptional.isPresent()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Campanha não encontrada");
-            }
-
-            Campanha campanha = campanhaOptional.get();
-
-            if (updates.containsKey("valorArrecadado")) {
-                BigDecimal novoValor = new BigDecimal(updates.get("valorArrecadado").toString());
-                campanha.setValorArrecadado(novoValor);
-                campanhaRepo.save(campanha);
-                return ResponseEntity.ok("Valor atualizado com sucesso");
-            } else {
-                return ResponseEntity.badRequest().body("Campo 'valorArrecadado' não encontrado");
-            }
-
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Formato de número inválido para valorArrecadado");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar a campanha");
-        }
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarCampanha(@PathVariable Long id) {

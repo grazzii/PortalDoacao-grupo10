@@ -156,91 +156,123 @@
 
     <script>
            async function carregarCampanhas() {
-            try {
-                const response = await fetch('/api/campanhas');
-                const campanhas = await response.json();
+    try {
+        const response = await fetch('/api/campanhas');
+        const campanhas = await response.json();
 
-                const container = document.getElementById('campanhasContainer');
-                container.innerHTML = '';
+        const container = document.getElementById('campanhasContainer');
+        const imagensAlternativas = [
+            'imagens/criancas.png',
+            'imagens/fome.png',
+            'imagens/doencas.png',
+            'imagens/agasalho.png'
+        ];
 
-                const imagensAlternativas = [
-                    'imagens/criancas.png',
-                    'imagens/fome.png',
-                    'imagens/doencas.png',
-                    'imagens/agasalho.png'
-                ];
-
-                campanhas.forEach((campanha, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'campanha-card';
-
-                    const imagemUrl = campanha.imagemUrl || imagensAlternativas[campanha.id % imagensAlternativas.length];
-                    const porcentagem = Math.floor((campanha.valorArrecadado / campanha.meta) * 100);
-
-                    const doacaoCompleta = campanha.valorArrecadado >= campanha.meta;
-                    const botaoDoacaoEstilo = doacaoCompleta ? 'background-color: gray; cursor: not-allowed;' : 'background-color: #1ac95d;';
-
-                    card.innerHTML = `
-                        <img src="${imagemUrl}" alt="${campanha.nome}">
-                        <div class="campanha-info">
-                            <h2>${campanha.nome}</h2>
-                            <p>${campanha.descricao}</p>
-                            <p><strong>Meta:</strong> R$ ${campanha.meta}</p>
-                            <p><strong>Arrecadado:</strong> R$ <span id="valorArrecadado-${campanha.id}">${campanha.valorArrecadado}</span></p>
-                            <p>${porcentagem}%</p>
-                            <div class="progress-bar">
-                                <div class="progress" style="width: ${porcentagem}%;"></div>
-                            </div>
-                            <input type="number" min="1" placeholder="Valor R$" id="donationValue-${campanha.id}" class="doar-input" ${doacaoCompleta ? 'disabled' : ''}/>
-                            <button class="doar-btn" style="${botaoDoacaoEstilo}" onclick="doarParaCampanha(${campanha.id})" ${doacaoCompleta ? 'disabled' : ''}>Doar</button>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-            } catch (error) {
-                showPopup("Erro", "Erro ao carregar as campanhas. Tente novamente mais tarde.", "error");
+        campanhas.forEach((campanha, index) => {
+            let card = document.getElementById(`campanha-card-${campanha.id}`);
+            
+            // Se o card já existe, atualize os dados
+            if (card) {
+                document.getElementById(`valorArrecadado-${campanha.id}`).textContent = campanha.valorArrecadado.toFixed(2);
+                const porcentagem = Math.floor((campanha.valorArrecadado / campanha.meta) * 100);
+                card.querySelector('.progress').style.width = `${porcentagem}%`;
+                return; // Evita recriação
             }
+
+            // Criação do novo card
+            card = document.createElement('div');
+            card.className = 'campanha-card';
+            card.id = `campanha-card-${campanha.id}`;
+
+            const imagemUrl = campanha.imagemUrl || imagensAlternativas[campanha.id % imagensAlternativas.length];
+            const porcentagem = Math.floor((campanha.valorArrecadado / campanha.meta) * 100);
+            const doacaoCompleta = campanha.valorArrecadado >= campanha.meta;
+            const botaoDoacaoEstilo = doacaoCompleta ? 'background-color: gray; cursor: not-allowed;' : 'background-color: #1ac95d;';
+
+            card.innerHTML = `
+                <img src="${imagemUrl}" alt="${campanha.nome}">
+                <div class="campanha-info">
+                    <h2>${campanha.nome}</h2>
+                    <p>${campanha.descricao}</p>
+                    <p><strong>Meta:</strong> R$ ${campanha.meta}</p>
+                    <p><strong>Arrecadado:</strong> R$ <span id="valorArrecadado-${campanha.id}">${campanha.valorArrecadado}</span></p>
+                    <p>${porcentagem}%</p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: ${porcentagem}%;"></div>
+                    </div>
+                    <input type="number" min="1" placeholder="Valor R$" id="donationValue-${campanha.id}" class="doar-input" />
+                    <button class="doar-btn" style="${botaoDoacaoEstilo}" onclick="doarParaCampanha(${campanha.id})" ${doacaoCompleta ? 'disabled' : ''}>Doar</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    } catch (error) {
+        showPopup("Erro", "Erro ao carregar as campanhas. Tente novamente mais tarde.", "error");
+    }
+}
+
+
+async function doarParaCampanha(id) {
+    const valorInput = document.getElementById(`donationValue-${id}`);
+    let valor = valorInput.value.replace(',', '.');
+
+    // Validação de valor
+    if (parseFloat(valor) <= 0 || isNaN(parseFloat(valor))) {
+        showPopup("Erro", "Por favor, insira um valor válido para a doação (maior que 0).", "error");
+        return;
+    }
+
+    const valorEnviado = parseFloat(valor).toFixed(2);
+
+    try {
+        // Obter os dados atuais da campanha
+        const responseCampanha = await fetch(`/api/campanhas/${id}`);
+        if (!responseCampanha.ok) {
+            showPopup("Erro", "Campanha não encontrada.", "error");
+            return;
         }
 
-        async function doarParaCampanha(id) {
-            const valorInput = document.getElementById(`donationValue-${id}`);
-            let valor = valorInput.value.replace(',', '.');
+        const campanha = await responseCampanha.json();
 
-            if (parseFloat(valor) <= 0 || isNaN(parseFloat(valor))) {
-                showPopup("Erro", "Por favor, insira um valor válido para a doação (maior que 0).", "error");
-                return;
-            }
+        // Somar o valor ao valor atual
+        const novoValorArrecadado = (parseFloat(campanha.valorArrecadado) + parseFloat(valorEnviado)).toFixed(2);
 
-            const valorEnviado = parseFloat(valor).toFixed(2);
+        // Enviar o valor atualizado para o backend
+        const response = await fetch(`/api/campanhas/${id}/doar`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ valorArrecadado: novoValorArrecadado })
+        });
 
-            try {
-                const responseCampanha = await fetch(`/api/campanhas/${id}`);
-                if (!responseCampanha.ok) {
-                    showPopup("Erro", "Campanha não encontrada.", "error");
-                    return;
-                }
-
-                const campanha = await responseCampanha.json();
-                campanha.valorArrecadado = (parseFloat(campanha.valorArrecadado) + parseFloat(valorEnviado)).toFixed(2);
-
-                const response = await fetch(`/api/campanhas/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(campanha)
-                });
-
-                if (response.ok) {
-                    showPopup("Escaneie o QR Code", "Transfira e ajude a melhorar o mundo!", "success");
-                    document.getElementById(`valorArrecadado-${id}`).textContent = campanha.valorArrecadado;
-                    valorInput.value = '';
-                    carregarCampanhas();
-                } else {
-                    showPopup("Erro", "Erro ao realizar doação. Verifique os dados e tente novamente.", "error");
-                }
-            } catch (error) {
-                showPopup("Erro", "Ocorreu um erro ao processar a doação. Tente novamente mais tarde.", "error");
-            }
+        if (response.ok) {
+            // Atualizar o valor na interface
+            document.getElementById(`valorArrecadado-${id}`).textContent = novoValorArrecadado;
+            valorInput.value = '';
+            showPopup("Sucesso", "Sua doação foi registrada com sucesso!", "success");
+            carregarCampanhas();
+        } else {
+            const errorMessage = await response.text();
+            showPopup("Erro", errorMessage || "Erro ao realizar a doação. Tente novamente.", "error");
         }
+    } catch (error) {
+        showPopup("Erro", "Ocorreu um erro ao processar a doação. Tente novamente mais tarde.", "error");
+    }
+}
+
+
+    function atualizarValor(id, valorArrecadadoAtual, meta) {
+    const valorInput = document.getElementById(`donationValue-${id}`);
+    const novoValor = parseFloat(valorInput.value) || 0;
+    const total = valorArrecadadoAtual + novoValor;
+
+    const percentual = Math.min(Math.floor((total / meta) * 100), 100);
+
+    // Atualiza o valor arrecadado e a barra de progresso no HTML
+    document.getElementById(`valorArrecadado-${id}`).textContent = total.toFixed(2);
+    document.getElementById(`percentual-${id}`).textContent = `${percentual}%`;
+    document.getElementById(`progress-${id}`).style.width = `${percentual}%`;
+}
+
 
         function showPopup(title, message, type) {
             const popup = document.getElementById("popup");

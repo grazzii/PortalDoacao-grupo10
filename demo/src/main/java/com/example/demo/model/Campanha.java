@@ -1,78 +1,113 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
+@Table(name = "campanha")
 public class Campanha {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @Column(name = "nome", nullable = false)
     private String nome;
 
+    @Column(name = "descricao", nullable = false)
     private String descricao;
 
-    @Column(precision = 10, scale = 2) // Para garantir a precisão do campo numérico
+    @Column(name = "meta", nullable = false)
     private BigDecimal meta;
 
-    @Column(precision = 10, scale = 2) // Inicializa com 0 para evitar valores nulos
-    private BigDecimal valorArrecadado = BigDecimal.ZERO;
+    @Column(name = "valor_arrecadado", nullable = false)
+    private BigDecimal valorArrecadado = BigDecimal.ZERO; // Inicializa com 0
 
-    private String causa;
-
+    @Column(name = "data_inicio", nullable = false)
     private LocalDate dataInicio;
 
+    @Column(name = "data_fim", nullable = false)
     private LocalDate dataFim;
 
-    // Construtor sem parâmetros
-    public Campanha() {}
+    @Column(name = "causa", nullable = false)
+    private String causa; // A causa da campanha
 
-    // Construtor com todos os parâmetros
-    public Campanha(Long id, String nome, String descricao, BigDecimal meta, BigDecimal valorArrecadado, String causa, LocalDate dataInicio, LocalDate dataFim, Categoria categoria) {
+    @OneToMany(mappedBy = "campanha", cascade = CascadeType.ALL)
+    private List<Doacao> doacoes;
+    
+
+    // Getters e Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public BigDecimal getMeta() {
+        return meta;
+    }
+
+    public void setMeta(BigDecimal meta) {
         this.meta = meta;
-        this.valorArrecadado = valorArrecadado != null ? valorArrecadado : BigDecimal.ZERO;
-        this.causa = causa;
+    }
+
+    public BigDecimal getValorArrecadado() {
+        return valorArrecadado;
+    }
+
+    public void setValorArrecadado(BigDecimal valorArrecadado) {
+        this.valorArrecadado = valorArrecadado;
+    }
+
+    public LocalDate getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(LocalDate dataInicio) {
         this.dataInicio = dataInicio;
+    }
+
+    public LocalDate getDataFim() {
+        return dataFim;
+    }
+
+    public void setDataFim(LocalDate dataFim) {
         this.dataFim = dataFim;
     }
 
-    // Getters e Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
-
-    public String getDescricao() { return descricao; }
-    public void setDescricao(String descricao) { this.descricao = descricao; }
-
-    public BigDecimal getMeta() { return meta; }
-    public void setMeta(BigDecimal meta) { this.meta = meta; }
-
-    public BigDecimal getValorArrecadado() { return valorArrecadado; }
-    public void setValorArrecadado(BigDecimal valorArrecadado) {
-        this.valorArrecadado = valorArrecadado != null ? valorArrecadado : BigDecimal.ZERO;
+    public String getCausa() {
+        return causa; // Método getCausa() foi adicionado
     }
 
-    public String getCausa() { return causa; }
-    public void setCausa(String causa) { this.causa = causa; }
+    public void setCausa(String causa) {
+        this.causa = causa; // Método setCausa() foi adicionado
+    }
 
-    public LocalDate getDataInicio() { return dataInicio; }
-    public void setDataInicio(LocalDate dataInicio) { this.dataInicio = dataInicio; }
+    public List<Doacao> getDoacoes() {
+        return doacoes;
+    }
 
-    public LocalDate getDataFim() { return dataFim; }
-    public void setDataFim(LocalDate dataFim) { this.dataFim = dataFim; }
-
-    // Método para somar o valor da doação ao valor arrecadado
-    public void doar(BigDecimal valor) {
-        if (valor != null && valor.compareTo(BigDecimal.ZERO) > 0) {
-            this.valorArrecadado = this.valorArrecadado.add(valor);
-        }
+    public void setDoacoes(List<Doacao> doacoes) {
+        this.doacoes = doacoes;
     }
 }
