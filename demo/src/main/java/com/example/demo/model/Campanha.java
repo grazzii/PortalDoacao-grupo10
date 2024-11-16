@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,7 +24,7 @@ public class Campanha {
     private BigDecimal meta;
 
     @Column(name = "valor_arrecadado", nullable = false)
-    private BigDecimal valorArrecadado = BigDecimal.ZERO; // Inicializa com 0
+    private BigDecimal valorArrecadado = BigDecimal.ZERO;
 
     @Column(name = "data_inicio", nullable = false)
     private LocalDate dataInicio;
@@ -32,11 +33,11 @@ public class Campanha {
     private LocalDate dataFim;
 
     @Column(name = "causa", nullable = false)
-    private String causa; // A causa da campanha
+    private String causa;
 
-    @OneToMany(mappedBy = "campanha", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "campanha", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Doacao> doacoes;
-    
 
     // Getters e Setters
     public Long getId() {
@@ -96,11 +97,11 @@ public class Campanha {
     }
 
     public String getCausa() {
-        return causa; // Método getCausa() foi adicionado
+        return causa;
     }
 
     public void setCausa(String causa) {
-        this.causa = causa; // Método setCausa() foi adicionado
+        this.causa = causa;
     }
 
     public List<Doacao> getDoacoes() {

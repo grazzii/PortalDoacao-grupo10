@@ -1,43 +1,44 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "doacao") // Garantimos o nome da tabela
+@Table(name = "doacao")
 public class Doacao {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // ID auto-incrementado
-    private Integer id; // Alterado para Integer para refletir o tipo INT na tabela
-
-    @Column(name = "valor_arrecadado", nullable = false) // Mapeia a coluna NUMERIC
-    private BigDecimal valor;
-
-    @Column(name = "data_doacao", nullable = false) // Mapeia a coluna DATE
-    private LocalDate dataDoacao;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "campanha_id", nullable = false) // Mapeia a coluna INT com chave estrangeira
+    @JoinColumn(name = "campanha_id", nullable = false)
+    @JsonBackReference
     private Campanha campanha;
 
-    // Construtores
-    public Doacao() {}
+    @Column(name = "valor", nullable = false)
+    private BigDecimal valor;
 
-    public Doacao(BigDecimal valor, LocalDate dataDoacao, Campanha campanha) {
-        this.valor = valor;
-        this.dataDoacao = dataDoacao;
-        this.campanha = campanha;
-    }
+    @Column(name = "data_doacao", nullable = false)
+    private LocalDate dataDoacao; // Alterado de int para LocalDate
 
-    // Getters e setters
-    public Integer getId() {
+    // Getters e Setters
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public Campanha getCampanha() {
+        return campanha;
+    }
+
+    public void setCampanha(Campanha campanha) {
+        this.campanha = campanha;
     }
 
     public BigDecimal getValor() {
@@ -53,14 +54,6 @@ public class Doacao {
     }
 
     public void setDataDoacao(LocalDate dataDoacao) {
-        this.dataDoacao = dataDoacao;
-    }
-
-    public Campanha getCampanha() {
-        return campanha;
-    }
-
-    public void setCampanha(Campanha campanha) {
-        this.campanha = campanha;
+        this.dataDoacao = dataDoacao; // Agora aceita LocalDate
     }
 }

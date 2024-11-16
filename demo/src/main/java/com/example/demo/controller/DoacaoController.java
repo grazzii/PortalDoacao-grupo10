@@ -4,6 +4,7 @@ import com.example.demo.model.Campanha;
 import com.example.demo.model.Doacao;
 import com.example.demo.repository.CampanhaRepo;
 import com.example.demo.repository.DoacaoRepo;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Map;
@@ -49,9 +50,6 @@ public class DoacaoController {
                 // Salvar a doação diretamente na tabela 'doacao'
                 doacaoRepo.save(doacao);
 
-                // Log da doação
-                System.out.println("Doação salva: " + doacao);
-
                 // Atualizar o valor arrecadado da campanha com o valor único da nova doação
                 campanha.setValorArrecadado(valor);  // Substitui o valor arrecadado com a nova doação
 
@@ -64,18 +62,9 @@ public class DoacaoController {
             return ResponseEntity.badRequest().body("Valor da doação não fornecido");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            // Logar o erro (sem stacktrace)
+            System.out.println("Erro ao processar a doação: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar a doação");
         }
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarCampanha(@PathVariable Long id) {
-        if (!campanhaRepo.existsById(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        campanhaRepo.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
 }
-
