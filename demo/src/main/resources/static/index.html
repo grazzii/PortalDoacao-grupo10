@@ -168,44 +168,48 @@
             'imagens/agasalho.png'
         ];
 
-        campanhas.forEach((campanha, index) => {
-            let card = document.getElementById(`campanha-card-${campanha.id}`);
-            
-            // Se o card já existe, atualize os dados
-            if (card) {
-                document.getElementById(`valorArrecadado-${campanha.id}`).textContent = campanha.valorArrecadado.toFixed(2);
-                const porcentagem = Math.floor((campanha.valorArrecadado / campanha.meta) * 100);
-                card.querySelector('.progress').style.width = `${porcentagem}%`;
-                return; // Evita recriação
-            }
+        campanhas.forEach(campanha => {
+    let card = document.getElementById(`campanha-card-${campanha.id}`);
+    const porcentagem = campanha.meta > 0 
+        ? Math.floor((campanha.valorArrecadado / campanha.meta) * 100) 
+        : 0;
 
-            // Criação do novo card
-            card = document.createElement('div');
-            card.className = 'campanha-card';
-            card.id = `campanha-card-${campanha.id}`;
+    if (card) {
+        // Atualizar os dados existentes no card
+        document.getElementById(`valorArrecadado-${campanha.id}`).textContent = campanha.valorArrecadado.toFixed(2);
+        card.querySelector('.progress').style.width = `${porcentagem}%`;
+        card.querySelector('.progress-porcentagem').textContent = `${porcentagem}%`;
+        return;
+    }
 
-            const imagemUrl = campanha.imagemUrl || imagensAlternativas[campanha.id % imagensAlternativas.length];
-            const porcentagem = Math.floor((campanha.valorArrecadado / campanha.meta) * 100);
-            const doacaoCompleta = campanha.valorArrecadado >= campanha.meta;
-            const botaoDoacaoEstilo = doacaoCompleta ? 'background-color: gray; cursor: not-allowed;' : 'background-color: #1ac95d;';
+    // Criação do novo card
+    card = document.createElement('div');
+    card.className = 'campanha-card';
+    card.id = `campanha-card-${campanha.id}`;
 
-            card.innerHTML = `
-                <img src="${imagemUrl}" alt="${campanha.nome}">
-                <div class="campanha-info">
-                    <h2>${campanha.nome}</h2>
-                    <p>${campanha.descricao}</p>
-                    <p><strong>Meta:</strong> R$ ${campanha.meta}</p>
-                    <p><strong>Arrecadado:</strong> R$ <span id="valorArrecadado-${campanha.id}">${campanha.valorArrecadado}</span></p>
-                    <p>${porcentagem}%</p>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: ${porcentagem}%;"></div>
-                    </div>
-                    <input type="number" min="1" placeholder="Valor R$" id="donationValue-${campanha.id}" class="doar-input" />
-                    <button class="doar-btn" style="${botaoDoacaoEstilo}" onclick="doarParaCampanha(${campanha.id})" ${doacaoCompleta ? 'disabled' : ''}>Doar</button>
-                </div>
-            `;
-            container.appendChild(card);
-        });
+    const imagemUrl = campanha.imagemUrl || imagensAlternativas[campanha.id % imagensAlternativas.length];
+    const doacaoCompleta = campanha.valorArrecadado >= campanha.meta;
+    const botaoDoacaoEstilo = doacaoCompleta ? 'background-color: gray; cursor: not-allowed;' : 'background-color: #1ac95d;';
+
+    card.innerHTML = `
+        <img src="${imagemUrl}" alt="${campanha.nome}">
+        <div class="campanha-info">
+            <h2>${campanha.nome}</h2>
+            <p>${campanha.descricao}</p>
+            <p><strong>Meta:</strong> R$ ${campanha.meta.toFixed(2)}</p>
+            <p><strong>Arrecadado:</strong> R$ <span id="valorArrecadado-${campanha.id}">${campanha.valorArrecadado.toFixed(2)}</span></p>
+            <p class="progress-porcentagem">${porcentagem}%</p>
+            <div class="progress-bar">
+                <div class="progress" style="width: ${porcentagem}%;"></div>
+            </div>
+            <input type="number" min="1" placeholder="Valor R$" id="donationValue-${campanha.id}" class="doar-input" />
+            <button class="doar-btn" style="${botaoDoacaoEstilo}" onclick="doarParaCampanha(${campanha.id})" ${doacaoCompleta ? 'disabled' : ''}>Doar</button>
+        </div>
+    `;
+    container.appendChild(card);
+});
+
+
     } catch (error) {
         showPopup("Erro", "Erro ao carregar as campanhas. Tente novamente mais tarde.", "error");
     }
