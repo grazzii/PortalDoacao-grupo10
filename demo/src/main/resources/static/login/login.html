@@ -33,45 +33,62 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Navbar */
-        .navbar {
-            background-color: #ffffff;
-            font-weight: 600;
-            width: 100%;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 0 0 8px 8px;
-            position: fixed;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+/* Navbar */
+.navbar {
+    background-color: #ffffff;
+    font-weight: 600;
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0 0 8px 8px;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-        .navbar h1 {
-            color: #1ac95d;
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-        .menu {
-            display: flex;
-        }
-        .menu a {
-            color: #1ac95d;
-            font-weight: 600;
-            text-decoration: none;
-            padding: 10px 15px;
-            margin: 0 5px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        .menu a.active {
-            border-bottom: 2px solid #1ac95d;
-        }
-        .menu a:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
+/* Logo */
+.navbar .logo {
+    text-decoration: none;
+    color: #1ac95d;
+    font-size: 1.5em;
+    transition: color 0.3s ease;
+}
+
+.navbar .logo img {
+    height: 40px; /* Ajuste o tamanho do logo conforme necessário */
+    margin-right: 10px;
+}
+
+.navbar h1 {
+    color: #1ac95d;
+    font-size: 1.5em;
+}
+
+/* Menu */
+.menu {
+    display: flex;
+}
+
+.menu a {
+    color: #1ac95d;
+    text-decoration: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.menu a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.menu a.active {
+    border-bottom: 2px solid #1ac95d;
+}
+
 
         /* Container do Login */
         .login-container {
@@ -205,12 +222,6 @@
             to { opacity: 1; transform: translate(-50%, -50%); }
         }
 
-        .logo {
-            text-decoration: none;
-            color: #1ac95d;
-            font-size: 1.5em;
-            transition: color 0.3s ease;
-        } 
 
         /* Responsivo */
         @media (max-width: 400px) {
