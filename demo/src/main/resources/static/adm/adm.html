@@ -84,6 +84,12 @@
             margin-bottom: 10px;
         }
 
+        .btn-footer {
+            display: flex; 
+            margin-top: auto; 
+            justify-content: flex-end
+        }
+
         .edit-btn, .insert-btn, .delete-btn {
             padding: 8px 15px;
             margin: 5px;
@@ -260,15 +266,19 @@
                     card.classList.add('campanha-card');
                     card.innerHTML = `
                         <h3>${campanha.nome}</h3>
-                        <p><strong>ID:</strong> ${campanha.id}</p>
-                        <p><strong>Descrição:</strong> ${campanha.descricao}</p>
-                        <p><strong>Meta:</strong> R$ ${campanha.meta}</p>
-                        <p><strong>Valor Arrecadado:</strong> R$ ${campanha.valorArrecadado}</p>
-                        <p><strong>Causa:</strong> ${campanha.causa}</p>
-                        <p><strong>Data Início:</strong> ${campanha.dataInicio}</p>
-                        <p><strong>Data Fim:</strong> ${campanha.dataFim}</p>
-                        <button class="edit-btn" onclick="abrirFormularioEditar(${campanha.id})">Editar</button>
-                        <button class="delete-btn" onclick="mostrarConfirmacao(${campanha.id})">Excluir</button>
+                        <div>
+                            <p><strong>ID:</strong> ${campanha.id}</p>
+                            <p><strong>Descrição:</strong> ${campanha.descricao}</p>
+                            <p><strong>Meta:</strong> R$ ${campanha.meta}</p>
+                            <p><strong>Valor Arrecadado:</strong> R$ ${campanha.valorArrecadado}</p>
+                            <p><strong>Causa:</strong> ${campanha.causa}</p>
+                            <p><strong>Data Início:</strong> ${campanha.dataInicio}</p>
+                            <p><strong>Data Fim:</strong> ${campanha.dataFim}</p>
+                        </div>
+                        <div class="btn-footer">
+                            <button class="edit-btn" onclick="abrirFormularioEditar(${campanha.id})">Editar</button>
+                            <button class="delete-btn" onclick="mostrarConfirmacao(${campanha.id})">Excluir</button>
+                        </div>
                     `;
                     container.appendChild(card);
                 });
