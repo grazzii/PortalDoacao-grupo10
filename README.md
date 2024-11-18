@@ -57,30 +57,34 @@ O Portal de Doações Ajudaê foi projetado para ser uma plataforma simples e in
   - Tela Principal (Home):
      - Exibe campanhas em formato de cards, contendo informações resumidas como título, descrição, meta de arrecadação, valor arrecadado e uma barra de progresso. Esse layout facilita a navegação e torna a visualização das campanhas intuitiva.
 
-    ![image](https://github.com/user-attachments/assets/de70599d-8a70-4ae0-a0ae-a815fb1cf618)
+    ![image](https://github.com/user-attachments/assets/cb4b7907-84f2-49c7-aa6f-94da228b40ac)
 
   - Tela "Como Funciona":
      - Organizada em etapas numeradas com ícones e descrições, ajuda o usuário a entender o processo de criação e divulgação de campanhas. Cada etapa se eleva ao passar o mouse, criando uma experiência interativa e amigável.
 
-    ![image](https://github.com/user-attachments/assets/1a0f6ba4-ae79-474a-a369-58838e3829db)
+    ![image](https://github.com/user-attachments/assets/3288713e-d05d-497e-a405-e5dd58a2320d)
+
+  - Tela de Contatos:
+    
+    ![image](https://github.com/user-attachments/assets/226435c2-6a83-40f7-8baa-f52aa329c4ad)
 
   - Tela de Login:
      - Utiliza um fundo em gradiente verde que alterna a paleta automaticamente, e um formulário centralizado, com efeitos sutis de expansão nos campos ao passar o mouse.
 
-    ![image](https://github.com/user-attachments/assets/7e74f5e7-44a6-44d4-8db8-4e9b21744630)
+    ![image](https://github.com/user-attachments/assets/f0164d7c-3ec9-4d40-8f41-d3ddc40c7a6a)
 
   - Caso as credencias estejam incorretas:
 
-    ![image](https://github.com/user-attachments/assets/d321da3c-7120-41bf-8786-d674e076292f)
+    ![image](https://github.com/user-attachments/assets/3fa34e37-8140-4fc8-a9b8-3d262f321c7e)
 
   - Recuperar senha (visual): 
 
-    ![image](https://github.com/user-attachments/assets/4897da7f-3295-434f-bebf-5992ed56d8a5)
+    ![image](https://github.com/user-attachments/assets/92ea7003-1fd7-4135-8962-cca5f109150f)
 
   - Tela Administrativa:
     - Disponível apenas para administradores, permite operações de CRUD em campanhas, com botões de edição e criação bem destacados. Essa tela foi desenhada para maximizar a eficiência do administrador na gestão de campanhas.
     
-    ![image](https://github.com/user-attachments/assets/027f9636-12cd-4fd4-8d17-54578289348a)
+    ![image](https://github.com/user-attachments/assets/c3e5d765-33bc-4576-a415-1de31f322222)
 
 4. **Interatividade e Feedback Visual**
       
