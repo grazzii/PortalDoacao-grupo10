@@ -65,6 +65,7 @@ O Portal de Doações Ajudaê foi projetado para ser uma plataforma simples e in
     ![image](https://github.com/user-attachments/assets/3288713e-d05d-497e-a405-e5dd58a2320d)
 
   - Tela de Contatos:
+     - Apresenta, de forma clara e visual, as responsabilidades de cada membro da equipe, mostrando quem contribuiu para a criação do projeto.
     
     ![image](https://github.com/user-attachments/assets/226435c2-6a83-40f7-8baa-f52aa329c4ad)
 
